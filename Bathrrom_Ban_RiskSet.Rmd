@@ -1,0 +1,36 @@
+---
+title: "Bathroom_Ban_RiskSet"
+author: "Grace Rade"
+date: "2022-12-07"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(rio)
+
+bathroom_ban <- read.csv("datasets/LawsPolicies.csv") %>% 
+  filter(Category == "Bathroom ban ") %>% 
+  mutate(Adoption_Year = Year) %>% 
+  select(-c(Description, X, Month, Day, Date)) 
+  
+empty_data <- read.csv("datasets/EmptyData.csv") %>% 
+  filter(Year == "2021" | Year == "2022", Category != "Curriculum") %>% 
+  unique() %>% 
+  select(-Policy) %>% 
+  mutate(Category = "Bathroom ban ")
+
+bathroom_risk_set <- empty_data %>% 
+  full_join(bathroom_ban, by = c("State", "Category", "Year")) %>% 
+  mutate(Adoption_Year = ifelse(Policy == 1, Year, 2022))%>% 
+  select(-Direction)
+
+bathroom_risk_set$Policy[is.na(bathroom_risk_set$Policy)] <- 0
+
+bathroom_risk_set$Policy[bathroom_risk_set$State == "Tennessee" & bathroom_risk_set$Policy == 0] <- 4
+
+bathroom_risk_set <- bathroom_risk_set %>% 
+  filter(Policy != 4)
+
+## this dataset is the correct risk set (i think), but i cannot generalize the wrangling i used for the other categories with more events
+```
+
