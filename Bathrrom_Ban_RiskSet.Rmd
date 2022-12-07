@@ -31,6 +31,5 @@ bathroom_risk_set$Policy[bathroom_risk_set$State == "Tennessee" & bathroom_risk_
 bathroom_risk_set <- bathroom_risk_set %>% 
   filter(Policy != 4)
 
-## this dataset is the correct risk set (i think), but i cannot generalize the wrangling i used for the other categories with more events
 ```
 
