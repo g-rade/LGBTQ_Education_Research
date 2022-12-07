@@ -1,0 +1,19 @@
+---
+title: "Research_Data_EDA"
+author: "Grace Rade"
+date: "2022-11-29"
+output: html_document
+---
+```{r}
+library(tidyverse)
+
+policy_data <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQiUxlPlcI8az4GTzkge4AUmxBlOPDS4aSp70JkDaRMGgw-sXjzxCGYK-fEnMy1euXBi-8UYZobEIda/pub?gid=0&single=true&output=csv")
+
+policy_data2 <- policy_data %>% 
+  group_by(Category, Direction) %>% 
+  summarize(sum(Policy))
+
+policy_data3 <- policy_data %>% 
+  filter(Policy == 1)
+```
+
