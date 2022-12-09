@@ -11,27 +11,39 @@ library(rio)
 bathroom_ban <- read.csv("datasets/LawsPolicies.csv") %>% 
   filter(Category == "Bathroom ban ") %>% 
   mutate(Adoption_Year = Year) %>% 
-  select(-c(Description, X, Month, Day, Date)) 
+  select(-c(Description, X, Month, Day, Date, Year)) 
+
+bathroom_ban$State[bathroom_ban$State == "Oklahoma "] <- "Oklahoma"
   
 empty_data <- read.csv("datasets/EmptyData.csv") %>% 
   filter(Year == "2021" | Year == "2022", Category != "Curriculum") %>% 
   unique() %>% 
-  select(-Policy) %>% 
-  mutate(Category = "Bathroom ban ")
+  select(-c(Policy, Category))
+
+empty_data$State[empty_data$State == "Oklahoma "] <- "Oklahoma"
 
 bathroom_risk_set <- empty_data %>% 
-  full_join(bathroom_ban, by = c("State", "Category", "Year")) %>% 
-  mutate(Adoption_Year = ifelse(Policy == 1, Year, 2022))%>% 
+  left_join(bathroom_ban) %>% 
+  mutate(Adoption_Year = ifelse(is.na(Adoption_Year), Year, NULL)) %>% 
+  filter(Adoption_Year >= Year | Policy == 0) %>% 
   select(-Direction)
 
 bathroom_risk_set$Policy[is.na(bathroom_risk_set$Policy)] <- 0
 
-bathroom_risk_set$Policy[bathroom_risk_set$State == "Tennessee" & bathroom_risk_set$Policy == 0] <- 4
+bathroom_risk_set$Adoption_Year[bathroom_risk_set$Policy == 0] <- 2022
+
+bathroom_risk_set$Category[is.na(bathroom_risk_set$Category)] <- "Bathroom ban "
+
+bathroom_risk_set$State[bathroom_risk_set$State == "Oklahoma "] <- "Oklahoma"
 
 bathroom_risk_set <- bathroom_risk_set %>% 
-  filter(Policy != 4)
+  filter(Year <= Adoption_Year)
 
+state <- bathroom_risk_set %>% 
+  group_by(State) %>% 
+  summarize(sum())
 
+bathroom_risk_set<- merge(bathroom_ban, empty_data, by=c("State","Year"), all=T)
 ## this dataset is the correct risk set (i think), but i cannot generalize the wrangling i used for the other categories with more events
 ```
 
