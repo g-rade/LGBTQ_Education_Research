@@ -1,0 +1,21 @@
+---
+title: "Curriculim_Risk_Set"
+author: "Grace Rade"
+date: "2022-12-13"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(rio)
+
+curriculum_data <- read.csv("datasets/LawsPolicies.csv") %>% 
+  filter(Category == "Curriculum " & Policy == 1) %>% 
+  select(-c(Description, X, Month, Day, Date))
+
+empty_data <- read.csv("datasets/EmptyData.csv") %>% 
+  select(-c(Policy, Category)) %>% 
+  unique()
+
+## need to set year to 1987
+```
+
