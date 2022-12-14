@@ -7,6 +7,7 @@ output: html_document
 ```{r}
 library(tidyverse)
 library(rio)
+require(lme4)
 
 bathroom_ban <- read.csv("datasets/LawsPolicies.csv") %>% 
   filter(Category == "Bathroom ban ") %>% 
@@ -22,28 +23,40 @@ empty_data <- read.csv("datasets/EmptyData.csv") %>%
 
 empty_data$State[empty_data$State == "Oklahoma "] <- "Oklahoma"
 
-bathroom_risk_set <- empty_data %>% 
-  left_join(bathroom_ban) %>% 
-  mutate(Adoption_Year = ifelse(is.na(Adoption_Year), Year, NULL)) %>% 
-  filter(Adoption_Year >= Year | Policy == 0) %>% 
-  select(-Direction)
 
-bathroom_risk_set$Policy[is.na(bathroom_risk_set$Policy)] <- 0
+### generate binary indicator for adoption, that way each state has at most 1 adoption
+ bathroom_risk_set <- empty_data %>% 
+  left_join(bathroom_ban)%>% 
+     mutate(Adoption_Year = replace_na(Adoption_Year, 2022)) %>%
+     mutate(Policy= replace_na(Policy, 0)) %>%
+     filter(Adoption_Year>=Year) %>%
+    mutate(adoption=ifelse(Year==Adoption_Year & Policy==1, 1, 0))
+ 
+ 
 
-bathroom_risk_set$Adoption_Year[bathroom_risk_set$Policy == 0] <- 2022
-
-bathroom_risk_set$Category[is.na(bathroom_risk_set$Category)] <- "Bathroom ban "
-
-bathroom_risk_set$State[bathroom_risk_set$State == "Oklahoma "] <- "Oklahoma"
-
-bathroom_risk_set <- bathroom_risk_set %>% 
-  filter(Year <= Adoption_Year)
-
-state <- bathroom_risk_set %>% 
-  group_by(State) %>% 
-  summarize(sum())
-
-bathroom_risk_set<- merge(bathroom_ban, empty_data, by=c("State","Year"), all=T)
-## this dataset is the correct risk set (i think), but i cannot generalize the wrangling i used for the other categories with more events
 ```
 
+
+
+```{r}
+### Sample code for estimating model with state level data
+#### This is already EHA form data
+
+state_data_eha <- import("datasets/digital_eha.dta") 
+### Adoption is a binary indicator, using logit to predict
+m1 <- glm(adoption~ std_population+std_mass_ideology+unified+std_income+ std_legp_squire, data=state_data_eha, family=binomial)
+
+summary(m1)
+
+
+state_data_eha$policyno <- as.factor(state_data_eha$policyno)
+### if we want to add random effects by policy
+### with so many policies, this may take a while (usually a few minutes)
+m2 <- glmer(adoption~ std_population+std_mass_ideology+unified+std_income+ std_legp_squire+ (1|policy), data=state_data_eha, family=binomial)
+
+summary(m2)
+
+
+#### state_data.dta has lots of controls/other variables up through 2019
+### NOTE- you will need to rename the variable State to statename (abbreviation is state)
+```
