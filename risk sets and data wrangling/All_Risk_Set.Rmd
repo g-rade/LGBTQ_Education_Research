@@ -1,0 +1,26 @@
+---
+title: "All_Risk"
+author: "Grace Rade"
+date: "2023-01-10"
+output: html_document
+---
+```{r}
+bathroom <- read.csv("datasets/bathroom_risk_set.csv")
+antibullying <- read.csv("datasets/antibullying_risk_set.csv")
+curriculum <- read.csv("datasets/curriculum_risk_set.csv")
+nondiscrimination <- read.csv("datasets/nondicrimination_risk_set.csv")
+sports <- read.csv("datasets/sports_risk_set.csv")
+```
+
+```{r}
+all_risk_set <- antibullying %>% 
+  full_join(bathroom) %>% 
+  full_join(curriculum) %>% 
+  full_join(nondiscrimination) %>% 
+  full_join(sports)
+```
+
+```{r}
+export(all_risk_set, "all_risk_set.csv")
+```
+

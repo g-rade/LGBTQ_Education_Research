@@ -59,3 +59,8 @@ summary(m2)
 #### state_data.dta has lots of controls/other variables up through 2019
 ### NOTE- you will need to rename the variable State to statename (abbreviation is state)
 ```
+
+```{r}
+export(bathroom_risk_set, "bathroom_risk_set.csv")
+```
+
