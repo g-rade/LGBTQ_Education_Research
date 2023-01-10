@@ -24,3 +24,7 @@ antibullying_risk_set <- empty_data %>%
   mutate(adoption=ifelse(Year==Adoption_Year & Policy==1, 1, 0))
 ```
 
+```{r}
+export(antibullying_risk_set, "antibullying_risk_set.csv")
+```
+

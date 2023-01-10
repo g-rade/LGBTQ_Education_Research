@@ -25,6 +25,9 @@ curriculum_risk_set <- empty_data %>%
 
 ## still doesn't get rid of extra observations  
 
-## need to set year to 1987
+```
+
+```{r}
+export(curriculum_risk_set, "curriculum_risk_set.csv")
 ```
 

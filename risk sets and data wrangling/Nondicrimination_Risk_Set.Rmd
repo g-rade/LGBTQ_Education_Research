@@ -25,3 +25,7 @@ nondiscrimination_risk_set <- empty_data %>%
 
 ```
 
+```{r}
+export(nondiscrimination_risk_set, "nondicrimination_risk_set.csv")
+```
+
