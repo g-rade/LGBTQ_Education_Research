@@ -12,7 +12,7 @@ require(lme4)
 empty_data <- read.csv("datasets/EmptyData2.csv")
 
 nondiscrimination_data <- read.csv("datasets/LawsPolicies.csv") %>% 
-  filter(Category == "Nondiscrimination", Policy == "1") %>% 
+  filter(Category == "Nondiscrimination") %>% 
   select(-c(Description, X, Month, Day, Date)) %>% 
   mutate(Adoption_Year = Year)
 
