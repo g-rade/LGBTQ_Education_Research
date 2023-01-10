@@ -1,0 +1,26 @@
+---
+title: "Sports_Risk_Set"
+author: "Grace Rade"
+date: "2023-01-10"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(rio)
+require(lme4)
+
+empty_data <- read.csv("datasets/EmptyData2.csv")
+
+sports_data <- read.csv("datasets/LawsPolicies.csv") %>% 
+  filter(Category == "Sports") %>% 
+  select(-c(Description, X, Month, Day, Date)) %>% 
+  mutate(Adoption_Year = Year)
+
+sports_risk_set <- empty_data %>% 
+  left_join(sports_data)%>% 
+  mutate(Adoption_Year = replace_na(Adoption_Year, 2022)) %>%
+  mutate(Policy= replace_na(Policy, 0)) %>%
+  filter(Adoption_Year>=Year) %>%
+  mutate(adoption=ifelse(Year==Adoption_Year & Policy==1, 1, 0))
+```
+
