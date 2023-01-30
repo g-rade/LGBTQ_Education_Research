@@ -18,3 +18,7 @@ risk_state <- all_risk_set %>%
   filter(Year >= 1990)  ## state data starts at 1990
 ```
 
+```{r}
+export(risk_state, "risk_states.csv")
+```
+
