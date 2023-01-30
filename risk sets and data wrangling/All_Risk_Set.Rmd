@@ -6,9 +6,11 @@ output: html_document
 ---
 ```{r}
 bathroom <- read.csv("datasets/bathroom_risk_set.csv")
-antibullying <- read.csv("datasets/antibullying_risk_set.csv")
+antibullying <- read.csv("datasets/antibullying_risk_set.csv") %>% 
+  select(-adoption)
 curriculum <- read.csv("datasets/curriculum_risk_set.csv")
-nondiscrimination <- read.csv("datasets/nondicrimination_risk_set.csv")
+nondiscrimination <- read.csv("datasets/nondicrimination_risk_set.csv") %>% 
+  select(-adoption)
 sports <- read.csv("datasets/sports_risk_set.csv")
 ```
 
