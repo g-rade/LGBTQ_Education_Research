@@ -5,6 +5,9 @@ date: "2023-01-10"
 output: html_document
 ---
 ```{r}
+library(tidyverse)
+library(rio)
+
 bathroom <- read.csv("datasets/bathroom_risk_set.csv")
 antibullying <- read.csv("datasets/antibullying_risk_set.csv") %>% 
   select(-adoption)
