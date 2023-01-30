@@ -11,15 +11,18 @@ require(lme4)
 
 empty_data <- read.csv("datasets/EmptyData2.csv")
 
-nondiscrimination_data <- read.csv("datasets/LawsPolicies.csv") %>% 
-  filter(Category == "Nondiscrimination") %>% 
-  select(-c(Description, X, Month, Day, Date)) %>% 
-  mutate(Adoption_Year = Year)
+
+nondiscrimination_data <- read.csv("datasets/Laws_Policies.csv") %>% 
+  filter(Category == "Nondiscrimination", Policy == "1") %>% 
+  select(-c(Description, X, Month, Day, Date, Policy)) %>% 
+  mutate(Adoption_Year = Year) %>% 
+  select(-Year)
+
 
 nondiscrimination_risk_set <- empty_data %>% 
   left_join(nondiscrimination_data)%>% 
+  mutate(Policy= if_else(Adoption_Year == Year, 1, 0)) %>%
   mutate(Adoption_Year = replace_na(Adoption_Year, 2022)) %>%
-  mutate(Policy= replace_na(Policy, 0)) %>%
   filter(Adoption_Year>=Year) %>%
   mutate(adoption=ifelse(Year==Adoption_Year & Policy==1, 1, 0))
 

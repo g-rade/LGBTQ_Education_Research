@@ -2,7 +2,7 @@ State,Year,Category,Direction,Adoption_Year,Policy
 Alabama,1987,Curriculum ,N,1992,0
 Alaska,1987,Curriculum ,,2022,0
 Arizona,1987,Curriculum ,N,1991,0
-Arkasas,1987,Curriculum ,,2022,0
+Arkansas,1987,Curriculum ,N,2021,0
 California,1987,Curriculum ,P,2011,0
 Colorado,1987,Curriculum ,P,2019,0
 Connecticut,1987,Curriculum ,P,2021,0
@@ -52,7 +52,7 @@ Wyoming,1987,Curriculum ,,2022,0
 Alabama,1988,Curriculum ,N,1992,0
 Alaska,1988,Curriculum ,,2022,0
 Arizona,1988,Curriculum ,N,1991,0
-Arkasas,1988,Curriculum ,,2022,0
+Arkansas,1988,Curriculum ,N,2021,0
 California,1988,Curriculum ,P,2011,0
 Colorado,1988,Curriculum ,P,2019,0
 Connecticut,1988,Curriculum ,P,2021,0
@@ -102,7 +102,7 @@ Wyoming,1988,Curriculum ,,2022,0
 Alabama,1989,Curriculum ,N,1992,0
 Alaska,1989,Curriculum ,,2022,0
 Arizona,1989,Curriculum ,N,1991,0
-Arkasas,1989,Curriculum ,,2022,0
+Arkansas,1989,Curriculum ,N,2021,0
 California,1989,Curriculum ,P,2011,0
 Colorado,1989,Curriculum ,P,2019,0
 Connecticut,1989,Curriculum ,P,2021,0
@@ -151,7 +151,7 @@ Wyoming,1989,Curriculum ,,2022,0
 Alabama,1990,Curriculum ,N,1992,0
 Alaska,1990,Curriculum ,,2022,0
 Arizona,1990,Curriculum ,N,1991,0
-Arkasas,1990,Curriculum ,,2022,0
+Arkansas,1990,Curriculum ,N,2021,0
 California,1990,Curriculum ,P,2011,0
 Colorado,1990,Curriculum ,P,2019,0
 Connecticut,1990,Curriculum ,P,2021,0
@@ -200,7 +200,7 @@ Wyoming,1990,Curriculum ,,2022,0
 Alabama,1991,Curriculum ,N,1992,0
 Alaska,1991,Curriculum ,,2022,0
 Arizona,1991,Curriculum ,N,1991,1
-Arkasas,1991,Curriculum ,,2022,0
+Arkansas,1991,Curriculum ,N,2021,0
 California,1991,Curriculum ,P,2011,0
 Colorado,1991,Curriculum ,P,2019,0
 Connecticut,1991,Curriculum ,P,2021,0
@@ -248,7 +248,7 @@ Wisconsin,1991,Curriculum ,,2022,0
 Wyoming,1991,Curriculum ,,2022,0
 Alabama,1992,Curriculum ,N,1992,1
 Alaska,1992,Curriculum ,,2022,0
-Arkasas,1992,Curriculum ,,2022,0
+Arkansas,1992,Curriculum ,N,2021,0
 California,1992,Curriculum ,P,2011,0
 Colorado,1992,Curriculum ,P,2019,0
 Connecticut,1992,Curriculum ,P,2021,0
@@ -294,7 +294,7 @@ West Virginia,1992,Curriculum ,,2022,0
 Wisconsin,1992,Curriculum ,,2022,0
 Wyoming,1992,Curriculum ,,2022,0
 Alaska,1993,Curriculum ,,2022,0
-Arkasas,1993,Curriculum ,,2022,0
+Arkansas,1993,Curriculum ,N,2021,0
 California,1993,Curriculum ,P,2011,0
 Colorado,1993,Curriculum ,P,2019,0
 Connecticut,1993,Curriculum ,P,2021,0
@@ -340,7 +340,7 @@ West Virginia,1993,Curriculum ,,2022,0
 Wisconsin,1993,Curriculum ,,2022,0
 Wyoming,1993,Curriculum ,,2022,0
 Alaska,1994,Curriculum ,,2022,0
-Arkasas,1994,Curriculum ,,2022,0
+Arkansas,1994,Curriculum ,N,2021,0
 California,1994,Curriculum ,P,2011,0
 Colorado,1994,Curriculum ,P,2019,0
 Connecticut,1994,Curriculum ,P,2021,0
@@ -386,7 +386,7 @@ West Virginia,1994,Curriculum ,,2022,0
 Wisconsin,1994,Curriculum ,,2022,0
 Wyoming,1994,Curriculum ,,2022,0
 Alaska,1995,Curriculum ,,2022,0
-Arkasas,1995,Curriculum ,,2022,0
+Arkansas,1995,Curriculum ,N,2021,0
 California,1995,Curriculum ,P,2011,0
 Colorado,1995,Curriculum ,P,2019,0
 Connecticut,1995,Curriculum ,P,2021,0
@@ -432,7 +432,7 @@ West Virginia,1995,Curriculum ,,2022,0
 Wisconsin,1995,Curriculum ,,2022,0
 Wyoming,1995,Curriculum ,,2022,0
 Alaska,1996,Curriculum ,,2022,0
-Arkasas,1996,Curriculum ,,2022,0
+Arkansas,1996,Curriculum ,N,2021,0
 California,1996,Curriculum ,P,2011,0
 Colorado,1996,Curriculum ,P,2019,0
 Connecticut,1996,Curriculum ,P,2021,0
@@ -477,7 +477,7 @@ West Virginia,1996,Curriculum ,,2022,0
 Wisconsin,1996,Curriculum ,,2022,0
 Wyoming,1996,Curriculum ,,2022,0
 Alaska,1997,Curriculum ,,2022,0
-Arkasas,1997,Curriculum ,,2022,0
+Arkansas,1997,Curriculum ,N,2021,0
 California,1997,Curriculum ,P,2011,0
 Colorado,1997,Curriculum ,P,2019,0
 Connecticut,1997,Curriculum ,P,2021,0
@@ -522,7 +522,7 @@ West Virginia,1997,Curriculum ,,2022,0
 Wisconsin,1997,Curriculum ,,2022,0
 Wyoming,1997,Curriculum ,,2022,0
 Alaska,1998,Curriculum ,,2022,0
-Arkasas,1998,Curriculum ,,2022,0
+Arkansas,1998,Curriculum ,N,2021,0
 California,1998,Curriculum ,P,2011,0
 Colorado,1998,Curriculum ,P,2019,0
 Connecticut,1998,Curriculum ,P,2021,0
@@ -567,7 +567,7 @@ West Virginia,1998,Curriculum ,,2022,0
 Wisconsin,1998,Curriculum ,,2022,0
 Wyoming,1998,Curriculum ,,2022,0
 Alaska,1999,Curriculum ,,2022,0
-Arkasas,1999,Curriculum ,,2022,0
+Arkansas,1999,Curriculum ,N,2021,0
 California,1999,Curriculum ,P,2011,0
 Colorado,1999,Curriculum ,P,2019,0
 Connecticut,1999,Curriculum ,P,2021,0
@@ -611,7 +611,7 @@ West Virginia,1999,Curriculum ,,2022,0
 Wisconsin,1999,Curriculum ,,2022,0
 Wyoming,1999,Curriculum ,,2022,0
 Alaska,2000,Curriculum ,,2022,0
-Arkasas,2000,Curriculum ,,2022,0
+Arkansas,2000,Curriculum ,N,2021,0
 California,2000,Curriculum ,P,2011,0
 Colorado,2000,Curriculum ,P,2019,0
 Connecticut,2000,Curriculum ,P,2021,0
@@ -655,7 +655,7 @@ West Virginia,2000,Curriculum ,,2022,0
 Wisconsin,2000,Curriculum ,,2022,0
 Wyoming,2000,Curriculum ,,2022,0
 Alaska,2001,Curriculum ,,2022,0
-Arkasas,2001,Curriculum ,,2022,0
+Arkansas,2001,Curriculum ,N,2021,0
 California,2001,Curriculum ,P,2011,0
 Colorado,2001,Curriculum ,P,2019,0
 Connecticut,2001,Curriculum ,P,2021,0
@@ -699,7 +699,7 @@ West Virginia,2001,Curriculum ,,2022,0
 Wisconsin,2001,Curriculum ,,2022,0
 Wyoming,2001,Curriculum ,,2022,0
 Alaska,2002,Curriculum ,,2022,0
-Arkasas,2002,Curriculum ,,2022,0
+Arkansas,2002,Curriculum ,N,2021,0
 California,2002,Curriculum ,P,2011,0
 Colorado,2002,Curriculum ,P,2019,0
 Connecticut,2002,Curriculum ,P,2021,0
@@ -742,7 +742,7 @@ West Virginia,2002,Curriculum ,,2022,0
 Wisconsin,2002,Curriculum ,,2022,0
 Wyoming,2002,Curriculum ,,2022,0
 Alaska,2003,Curriculum ,,2022,0
-Arkasas,2003,Curriculum ,,2022,0
+Arkansas,2003,Curriculum ,N,2021,0
 California,2003,Curriculum ,P,2011,0
 Colorado,2003,Curriculum ,P,2019,0
 Connecticut,2003,Curriculum ,P,2021,0
@@ -785,7 +785,7 @@ West Virginia,2003,Curriculum ,,2022,0
 Wisconsin,2003,Curriculum ,,2022,0
 Wyoming,2003,Curriculum ,,2022,0
 Alaska,2004,Curriculum ,,2022,0
-Arkasas,2004,Curriculum ,,2022,0
+Arkansas,2004,Curriculum ,N,2021,0
 California,2004,Curriculum ,P,2011,0
 Colorado,2004,Curriculum ,P,2019,0
 Connecticut,2004,Curriculum ,P,2021,0
@@ -828,7 +828,7 @@ West Virginia,2004,Curriculum ,,2022,0
 Wisconsin,2004,Curriculum ,,2022,0
 Wyoming,2004,Curriculum ,,2022,0
 Alaska,2005,Curriculum ,,2022,0
-Arkasas,2005,Curriculum ,,2022,0
+Arkansas,2005,Curriculum ,N,2021,0
 California,2005,Curriculum ,P,2011,0
 Colorado,2005,Curriculum ,P,2019,0
 Connecticut,2005,Curriculum ,P,2021,0
@@ -871,7 +871,7 @@ West Virginia,2005,Curriculum ,,2022,0
 Wisconsin,2005,Curriculum ,,2022,0
 Wyoming,2005,Curriculum ,,2022,0
 Alaska,2006,Curriculum ,,2022,0
-Arkasas,2006,Curriculum ,,2022,0
+Arkansas,2006,Curriculum ,N,2021,0
 California,2006,Curriculum ,P,2011,0
 Colorado,2006,Curriculum ,P,2019,0
 Connecticut,2006,Curriculum ,P,2021,0
@@ -914,7 +914,7 @@ West Virginia,2006,Curriculum ,,2022,0
 Wisconsin,2006,Curriculum ,,2022,0
 Wyoming,2006,Curriculum ,,2022,0
 Alaska,2007,Curriculum ,,2022,0
-Arkasas,2007,Curriculum ,,2022,0
+Arkansas,2007,Curriculum ,N,2021,0
 California,2007,Curriculum ,P,2011,0
 Colorado,2007,Curriculum ,P,2019,0
 Connecticut,2007,Curriculum ,P,2021,0
@@ -957,7 +957,7 @@ West Virginia,2007,Curriculum ,,2022,0
 Wisconsin,2007,Curriculum ,,2022,0
 Wyoming,2007,Curriculum ,,2022,0
 Alaska,2008,Curriculum ,,2022,0
-Arkasas,2008,Curriculum ,,2022,0
+Arkansas,2008,Curriculum ,N,2021,0
 California,2008,Curriculum ,P,2011,0
 Colorado,2008,Curriculum ,P,2019,0
 Connecticut,2008,Curriculum ,P,2021,0
@@ -1000,7 +1000,7 @@ West Virginia,2008,Curriculum ,,2022,0
 Wisconsin,2008,Curriculum ,,2022,0
 Wyoming,2008,Curriculum ,,2022,0
 Alaska,2009,Curriculum ,,2022,0
-Arkasas,2009,Curriculum ,,2022,0
+Arkansas,2009,Curriculum ,N,2021,0
 California,2009,Curriculum ,P,2011,0
 Colorado,2009,Curriculum ,P,2019,0
 Connecticut,2009,Curriculum ,P,2021,0
@@ -1043,7 +1043,7 @@ West Virginia,2009,Curriculum ,,2022,0
 Wisconsin,2009,Curriculum ,,2022,0
 Wyoming,2009,Curriculum ,,2022,0
 Alaska,2010,Curriculum ,,2022,0
-Arkasas,2010,Curriculum ,,2022,0
+Arkansas,2010,Curriculum ,N,2021,0
 California,2010,Curriculum ,P,2011,0
 Colorado,2010,Curriculum ,P,2019,0
 Connecticut,2010,Curriculum ,P,2021,0
@@ -1086,7 +1086,7 @@ West Virginia,2010,Curriculum ,,2022,0
 Wisconsin,2010,Curriculum ,,2022,0
 Wyoming,2010,Curriculum ,,2022,0
 Alaska,2011,Curriculum ,,2022,0
-Arkasas,2011,Curriculum ,,2022,0
+Arkansas,2011,Curriculum ,N,2021,0
 California,2011,Curriculum ,P,2011,1
 Colorado,2011,Curriculum ,P,2019,0
 Connecticut,2011,Curriculum ,P,2021,0
@@ -1129,7 +1129,7 @@ West Virginia,2011,Curriculum ,,2022,0
 Wisconsin,2011,Curriculum ,,2022,0
 Wyoming,2011,Curriculum ,,2022,0
 Alaska,2012,Curriculum ,,2022,0
-Arkasas,2012,Curriculum ,,2022,0
+Arkansas,2012,Curriculum ,N,2021,0
 Colorado,2012,Curriculum ,P,2019,0
 Connecticut,2012,Curriculum ,P,2021,0
 Delaware,2012,Curriculum ,,2022,0
@@ -1170,7 +1170,7 @@ West Virginia,2012,Curriculum ,,2022,0
 Wisconsin,2012,Curriculum ,,2022,0
 Wyoming,2012,Curriculum ,,2022,0
 Alaska,2013,Curriculum ,,2022,0
-Arkasas,2013,Curriculum ,,2022,0
+Arkansas,2013,Curriculum ,N,2021,0
 Colorado,2013,Curriculum ,P,2019,0
 Connecticut,2013,Curriculum ,P,2021,0
 Delaware,2013,Curriculum ,,2022,0
@@ -1211,7 +1211,7 @@ West Virginia,2013,Curriculum ,,2022,0
 Wisconsin,2013,Curriculum ,,2022,0
 Wyoming,2013,Curriculum ,,2022,0
 Alaska,2014,Curriculum ,,2022,0
-Arkasas,2014,Curriculum ,,2022,0
+Arkansas,2014,Curriculum ,N,2021,0
 Colorado,2014,Curriculum ,P,2019,0
 Connecticut,2014,Curriculum ,P,2021,0
 Delaware,2014,Curriculum ,,2022,0
@@ -1252,7 +1252,7 @@ West Virginia,2014,Curriculum ,,2022,0
 Wisconsin,2014,Curriculum ,,2022,0
 Wyoming,2014,Curriculum ,,2022,0
 Alaska,2015,Curriculum ,,2022,0
-Arkasas,2015,Curriculum ,,2022,0
+Arkansas,2015,Curriculum ,N,2021,0
 Colorado,2015,Curriculum ,P,2019,0
 Connecticut,2015,Curriculum ,P,2021,0
 Delaware,2015,Curriculum ,,2022,0
@@ -1293,7 +1293,7 @@ West Virginia,2015,Curriculum ,,2022,0
 Wisconsin,2015,Curriculum ,,2022,0
 Wyoming,2015,Curriculum ,,2022,0
 Alaska,2016,Curriculum ,,2022,0
-Arkasas,2016,Curriculum ,,2022,0
+Arkansas,2016,Curriculum ,N,2021,0
 Colorado,2016,Curriculum ,P,2019,0
 Connecticut,2016,Curriculum ,P,2021,0
 Delaware,2016,Curriculum ,,2022,0
@@ -1334,7 +1334,7 @@ West Virginia,2016,Curriculum ,,2022,0
 Wisconsin,2016,Curriculum ,,2022,0
 Wyoming,2016,Curriculum ,,2022,0
 Alaska,2017,Curriculum ,,2022,0
-Arkasas,2017,Curriculum ,,2022,0
+Arkansas,2017,Curriculum ,N,2021,0
 Colorado,2017,Curriculum ,P,2019,0
 Connecticut,2017,Curriculum ,P,2021,0
 Delaware,2017,Curriculum ,,2022,0
@@ -1375,7 +1375,7 @@ West Virginia,2017,Curriculum ,,2022,0
 Wisconsin,2017,Curriculum ,,2022,0
 Wyoming,2017,Curriculum ,,2022,0
 Alaska,2018,Curriculum ,,2022,0
-Arkasas,2018,Curriculum ,,2022,0
+Arkansas,2018,Curriculum ,N,2021,0
 Colorado,2018,Curriculum ,P,2019,0
 Connecticut,2018,Curriculum ,P,2021,0
 Delaware,2018,Curriculum ,,2022,0
@@ -1416,7 +1416,7 @@ West Virginia,2018,Curriculum ,,2022,0
 Wisconsin,2018,Curriculum ,,2022,0
 Wyoming,2018,Curriculum ,,2022,0
 Alaska,2019,Curriculum ,,2022,0
-Arkasas,2019,Curriculum ,,2022,0
+Arkansas,2019,Curriculum ,N,2021,0
 Colorado,2019,Curriculum ,P,2019,1
 Connecticut,2019,Curriculum ,P,2021,0
 Delaware,2019,Curriculum ,,2022,0
@@ -1457,7 +1457,7 @@ West Virginia,2019,Curriculum ,,2022,0
 Wisconsin,2019,Curriculum ,,2022,0
 Wyoming,2019,Curriculum ,,2022,0
 Alaska,2020,Curriculum ,,2022,0
-Arkasas,2020,Curriculum ,,2022,0
+Arkansas,2020,Curriculum ,N,2021,0
 Connecticut,2020,Curriculum ,P,2021,0
 Delaware,2020,Curriculum ,,2022,0
 Georgia,2020,Curriculum ,,2022,0
@@ -1494,7 +1494,7 @@ West Virginia,2020,Curriculum ,,2022,0
 Wisconsin,2020,Curriculum ,,2022,0
 Wyoming,2020,Curriculum ,,2022,0
 Alaska,2021,Curriculum ,,2022,0
-Arkasas,2021,Curriculum ,,2022,0
+Arkansas,2021,Curriculum ,N,2021,1
 Connecticut,2021,Curriculum ,P,2021,1
 Delaware,2021,Curriculum ,,2022,0
 Georgia,2021,Curriculum ,,2022,0
@@ -1531,7 +1531,6 @@ West Virginia,2021,Curriculum ,,2022,0
 Wisconsin,2021,Curriculum ,,2022,0
 Wyoming,2021,Curriculum ,,2022,0
 Alaska,2022,Curriculum ,,2022,0
-Arkasas,2022,Curriculum ,,2022,0
 Delaware,2022,Curriculum ,,2022,0
 Georgia,2022,Curriculum ,,2022,0
 Hawaii,2022,Curriculum ,,2022,0

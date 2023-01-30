@@ -16,23 +16,17 @@ bathroom_ban <- read.csv("datasets/LawsPolicies.csv") %>%
 
 bathroom_ban$State[bathroom_ban$State == "Oklahoma "] <- "Oklahoma"
   
-empty_data <- read.csv("datasets/EmptyData.csv") %>% 
-  filter(Year == "2021" | Year == "2022", Category != "Curriculum") %>% 
-  unique() %>% 
-  select(-c(Policy, Category))
-
-empty_data$State[empty_data$State == "Oklahoma "] <- "Oklahoma"
+empty_data <- read.csv("datasets/EmptyData2.csv")
 
 
 ### generate binary indicator for adoption, that way each state has at most 1 adoption
 bathroom_risk_set <- empty_data %>% 
   left_join(bathroom_ban)%>% 
      mutate(Adoption_Year = replace_na(Adoption_Year, 2022)) %>%
-     mutate(Policy= replace_na(Policy, 0)) %>%
-     filter(Adoption_Year>=Year) %>%
-    mutate(adoption=ifelse(Year==Adoption_Year & Policy==1, 1, 0))
+     mutate(Policy= if_else(Adoption_Year == Year, 1, 0)) %>%
+     filter(Adoption_Year>=Year)
  
-
+bathroom_risk_set$Category[is.na(bathroom_risk_set$Category)] <- "Bathroom ban "
 ```
 
 
