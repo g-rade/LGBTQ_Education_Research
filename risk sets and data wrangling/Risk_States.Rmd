@@ -10,12 +10,11 @@ library(rio)
 library(haven)
 
 all_risk_set <- read.csv("datasets/all_risk_set.csv")
-state_data <- read_dta("datasets/state_data.dta") %>% 
-  rename(State = "state_name", Year = "year")
+state_data <- read_dta("datasets/race_health_data.dta") %>% 
+  rename(State = "statename", Year = "year")
 
 risk_state <- all_risk_set %>% 
-  full_join(state_data) %>% 
-  filter(Year >= 1990)  ## state data starts at 1990
+  left_join(state_data)
 ```
 
 ```{r}

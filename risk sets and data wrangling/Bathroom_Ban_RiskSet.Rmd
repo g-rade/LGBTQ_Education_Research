@@ -41,7 +41,6 @@ m1 <- glm(adoption~ std_population+std_mass_ideology+unified+std_income+ std_leg
 
 summary(m1)
 
-
 state_data_eha$policyno <- as.factor(state_data_eha$policyno)
 ### if we want to add random effects by policy
 ### with so many policies, this may take a while (usually a few minutes)
