@@ -26,8 +26,8 @@ nondiscrimination_risk_set <- empty_data %>%
   filter(Adoption_Year>=Year) %>%
   mutate(adoption=ifelse(Year==Adoption_Year & Policy==1, 1, 0))
 
-nondiscrimination_risk_set$Policy[is.na(curriculum_risk_set$Policy)] <- 0
-nondiscrimination_risk_set$Category[is.na(curriculum_risk_set$Category)] <- "Nondiscrimination"
+nondiscrimination_risk_set$Policy[is.na(nondiscrimination_risk_set$Policy)] <- 0
+nondiscrimination_risk_set$Category[is.na(nondiscrimination_risk_set$Category)] <- "Nondiscrimination"
 ```
 
 ```{r}
