@@ -1,0 +1,53 @@
+---
+title: "Modeling1.Rmd"
+author: "Grace Rade"
+date: "2023-02-10"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(rio)
+library(haven)
+
+risk_states1 <- import("datasets/risk_states1.csv")
+risk_states <- import("datasets/risk_states.csv")
+```
+
+```{r}
+## sample code
+state_data_eha <- import("datasets/digital_eha.dta") 
+
+## playing around
+m1 <- glm(Policy~Direction, data=risk_states, family=binomial)
+summary(m1)
+
+m2 <- glm(Policy ~ Year + Direction + Category, data = risk_states, family = binomial)
+summary(m2)
+
+m3 <- glm(Policy ~ Adoption_Year + Category + Direction, data = risk_states, family = binomial)
+summary(m3)
+
+
+m4 <- glm(Policy ~ Adoption_Year + Category + Direction + st_gov_ideo, data = risk_states, family = binomial)
+summary(m4)
+
+m5 <- glm(Policy ~ Adoption_Year + Category + Direction, data = risk_states, family = binomial)
+summary(m5)
+
+state_data_eha$policyno <- as.factor(state_data_eha$policyno)
+### if we want to add random effects by policy
+### with so many policies, this may take a while (usually a few minutes)
+#m2 <- glmer(adoption~ std_population+std_mass_ideology+unified+std_income+ std_legp_squire+ (1|policy), data=state_data_eha, family=binomial)
+
+#summary(m2)
+
+m6 <- glm(policy~nbrs_lag, data = risk_states1, family = binomial)
+summary(m6)
+
+## a state is more likely to adopt a policy if a neighboring state has adopted a policy, and the likelihood increases if more states adopt
+
+m7 <- m6 <- glm(policy~nbrs_lag + population, data = risk_states1, family = binomial)
+summary(m7)
+```
+
