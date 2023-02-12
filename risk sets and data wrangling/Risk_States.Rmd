@@ -8,16 +8,18 @@ output: html_document
 library(tidyverse)
 library(rio)
 library(haven)
+library(janitor)
 
-all_risk_set <- read.csv("datasets/all_risk_set.csv")
-state_data <- read_dta("datasets/race_health_data.dta") %>% 
-  rename(State = "statename", Year = "year")
+all_risk_set <- read.csv("datasets/all_risk_set.csv") %>% 
+  clean_names()
+state_data <- read_csv("datasets/risk_states1.csv")
 
 risk_state <- all_risk_set %>% 
-  left_join(state_data)
+  full_join(state_data) %>% 
+  mutate(duration = year - first_year)
 ```
 
 ```{r}
-export(risk_state, "risk_states.csv")
+export(risk_state, "risk_states2.csv")
 ```
 

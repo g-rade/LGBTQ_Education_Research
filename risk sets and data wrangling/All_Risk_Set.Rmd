@@ -23,7 +23,11 @@ all_risk_set <- antibullying %>%
   full_join(bathroom) %>% 
   full_join(curriculum) %>% 
   full_join(nondiscrimination) %>% 
-  full_join(sports)
+  full_join(sports) 
+
+all_risk_set$State[all_risk_set$State == "Lousiana"] <- "Louisiana"
+
+all_risk_set <- distinct(all_risk_set)
 ```
 
 ```{r}
