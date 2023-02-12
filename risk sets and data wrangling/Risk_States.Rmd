@@ -12,6 +12,7 @@ library(janitor)
 
 all_risk_set <- read.csv("datasets/all_risk_set.csv") %>% 
   clean_names()
+
 state_data <- read_csv("datasets/risk_states1.csv")
 
 risk_state <- all_risk_set %>% 
