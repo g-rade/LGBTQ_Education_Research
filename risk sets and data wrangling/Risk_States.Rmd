@@ -17,7 +17,9 @@ state_data <- read_csv("datasets/risk_states1.csv")
 
 risk_state <- all_risk_set %>% 
   full_join(state_data) %>% 
-  mutate(duration = year - first_year)
+  mutate(duration = year - first_year, duration_sq = duration^2, duration_cub = duration^3) %>% 
+  mutate(lawrence = ifelse(lag(adoption_year) <= 2003, 0, 1), obergefell = ifelse(lag(adoption_year) <= 2015, 0, 1))
+  
 ```
 
 ```{r}

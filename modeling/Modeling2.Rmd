@@ -1,0 +1,52 @@
+---
+title: "Modeling2"
+author: "Grace Rade"
+date: "2023-02-17"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(rio)
+library(haven)
+```
+
+```{r}
+risk_state <- import("datasets/risk_states2.csv")
+```
+
+```{r}
+## model 1 of using all the vars Scott told me to
+m1 <- glm(policy~pollib_median+std_bowen1+std_bowen2+std_init_use+
+unified+duration+duration_sq+duration_cub, data=risk_state, family=binomial)
+
+summary(m1)
+
+## pcpincome not found
+```
+
+```{r}
+## model 2 including before/after lawrence v texas
+m2 <- glm(policy~pollib_median+std_bowen1+std_bowen2+std_init_use+
+unified+duration+duration_sq+duration_cub+lawrence, data=risk_state, family=binomial)
+
+summary(m2)
+```
+
+```{r}
+## model 3 including before/after obergerfell
+m3 <- glm(policy~pollib_median+std_bowen1+std_bowen2+std_init_use+
+unified+duration+duration_sq+duration_cub+obergefell, data=risk_state, family=binomial)
+
+summary(m3)
+```
+
+```{r}
+## model 4 including both court cases
+
+m4 <- glm(policy~pollib_median+std_bowen1+std_bowen2+std_init_use+
+unified+duration+duration_sq+duration_cub+obergefell+lawrence, data=risk_state, family=binomial)
+
+summary(m4)
+```
+
