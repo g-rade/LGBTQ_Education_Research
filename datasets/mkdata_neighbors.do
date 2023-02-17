@@ -38,8 +38,7 @@ sources(src_10_400) policy(category) sourcefile(sources_latent.dta)
 	generat latnt_lag = 0 if year == first_year
 	replace latnt_lag = latnt_adpt[_n-1] if year > first_year ///
 	& state==state[_n-1]
-	
-	
+
 	
 	export delimited using "risk_states1", replace
 	
