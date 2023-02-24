@@ -11,7 +11,7 @@ library(rio)
 library(haven)
 
 risk_states1 <- import("datasets/risk_states1.csv")
-risk_states <- import("datasets/risk_states.csv")
+risk_states <- import("~/datasets/risk_states.csv")
 ```
 
 ```{r}

@@ -15,14 +15,20 @@ all_risk_set <- read.csv("datasets/all_risk_set.csv") %>%
 
 state_data <- read_csv("datasets/risk_states1.csv")
 
+evang <- read.csv("datasets/evangelical_pop data.csv")
+
 risk_state <- all_risk_set %>% 
   full_join(state_data) %>% 
   mutate(duration = year - first_year, duration_sq = duration^2, duration_cub = duration^3) %>% 
   mutate(lawrence = ifelse(lag(adoption_year) <= 2003, 0, 1), obergefell = ifelse(lag(adoption_year) <= 2015, 0, 1))
+
+risk_state <- risk_state %>% 
+  left_join(evang) %>% 
+  select(state, year, policy, category, direction, adoption_year, population_total, pollib_median, incomepcap, income, std_bowen1, std_bowen2, unified, duration, duration_sq, duration_cub, nbrs_lag, nbrs, lawrence, obergefell, std_init_use)
   
 ```
 
 ```{r}
-export(risk_state, "risk_states2.csv")
+export(risk_state, "risk_states3.csv")
 ```
 
