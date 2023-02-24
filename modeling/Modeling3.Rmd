@@ -1,0 +1,26 @@
+---
+title: "Modeling3"
+author: "Grace Rade"
+date: "2023-02-24"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(rio)
+library(haven)
+
+state_data <- read.csv("datasets/risk_states3.csv")
+```
+
+```{r}
+## Model 1 for primary hypothesis
+
+primary_model <- glm(policy~lawrence + obergefell + nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_data, family = binomial)
+
+summary(primary_model)
+```
+
+```{r}
+secondary_model <- glm(policy~lawrence + obergefell + evangelical_pop + nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_data, family = binomial) ## doesn't work for some reason
+```
+
