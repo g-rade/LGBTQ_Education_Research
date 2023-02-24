@@ -8,19 +8,29 @@ output: html_document
 library(tidyverse)
 library(rio)
 library(haven)
+library(stargazer)
+library(reader)
 
 state_data <- read.csv("datasets/risk_states3.csv")
 ```
 
 ```{r}
-## Model 1 for primary hypothesis
+## Model 1 for primary hypothesis, do another one to control for nothing just our primary vars
 
 primary_model <- glm(policy~lawrence + obergefell + nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_data, family = binomial)
 
 summary(primary_model)
+
+stargazer(primary_model, type="html")
 ```
 
 ```{r}
-secondary_model <- glm(policy~lawrence + obergefell + evangelical_pop + nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_data, family = binomial) ## doesn't work for some reason
+## add the new evangelical data and then try to find the mean variable that breaks it
+
+## interaction between evangelical*pre/post for the cases (separately)
+
+glm(policy~evangelical_pop, data=state_data)
+
+secondary_model <- glm(policy~lawrence + obergefell + evangelical_pop+ nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_data, family = binomial) ## doesn't work for some reason
 ```
 
