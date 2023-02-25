@@ -11,7 +11,7 @@ library(haven)
 library(stargazer)
 library(reader)
 
-state_data <- read.csv("datasets/risk_states3.csv")
+state_data <- import("../../datasets/risk_states3.csv")
 ```
 
 ```{r}
@@ -21,7 +21,7 @@ primary_model <- glm(policy~lawrence + obergefell + nbrs_lag + population_total 
 
 summary(primary_model)
 
-stargazer(primary_model, type="html")
+stargazer(primary_model, type="text", out ="model1.docx")
 ```
 
 ```{r}
