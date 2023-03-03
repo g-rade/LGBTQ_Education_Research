@@ -11,24 +11,35 @@ library(haven)
 library(janitor)
 
 all_risk_set <- read.csv("datasets/all_risk_set.csv") %>% 
-  clean_names()
+  clean_names() %>% 
+  rename(statename = "state")
 
 state_data <- read_csv("datasets/risk_states1.csv")
 
 evang <- read.csv("datasets/evangelical_pop data.csv") %>% 
   select(year, state, evangelical_pop, st) %>% 
-  filter(!is.na(evangelical_pop))
+  filter(!is.na(evangelical_pop)) %>% 
+  rename(statename = "state") %>% 
+  rename(state = "st")
 
 
 evang2 <- import("datasets/ces_data.dta") %>% 
-  rename(evangelical_pop = "pew_bornagain", state = 'state_name', st = "state") %>% 
-  select(year, state, evangelical_pop, st) %>% 
+  rename(evangelical_pop = "pew_bornagain", statename = 'state_name') %>% 
+  select(year, state, evangelical_pop, statename) %>% 
   mutate(evangelical_pop = evangelical_pop*100)
 
-evang2$state <- str_to_title(evang2$state)
+state2 <- state_data %>% 
+  filter(year == c(2014, 2015)) %>% 
+  select(year, state, statename) 
+
+evang2$statename <- str_to_title(evang2$statename)
+evang2 <- evang2 %>% 
+  left_join(state2)
 
 evang <- evang %>% 
   full_join(evang2)
+
+
 
 risk_state <- all_risk_set %>% 
   full_join(state_data) %>% 
@@ -37,12 +48,12 @@ risk_state <- all_risk_set %>%
 
 risk_state <- risk_state %>% 
   left_join(evang) %>% 
-  select(state, year, policy, category, direction, adoption_year, population_total, pollib_median, incomepcap, income, std_bowen1, std_bowen2, unified, duration, duration_sq, duration_cub, nbrs_lag, nbrs, lawrence, obergefell, std_init_use, evangelical_pop) 
+  select(state, statename, year, policy, category, direction, adoption_year, population_total, pollib_median, incomepcap, income, std_bowen1, std_bowen2, unified, duration, duration_sq, duration_cub, nbrs_lag, nbrs, lawrence, obergefell, std_init_use, evangelical_pop)
 
 
 
 nums <- risk_state %>% 
-  filter(!is.na(evangelical_pop)) %>% 
+  filter(is.na(evangelical_pop)) %>% 
   group_by(year) %>% 
   summarize(n())
 
