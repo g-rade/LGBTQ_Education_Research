@@ -29,7 +29,7 @@ stargazer(primary_model, type="text", out ="model1.docx")
 
 ## interaction between evangelical*pre/post for the cases (separately)
 
-glm(policy~evangelical_pop, data=state_data)
+
 
 secondary_model <- glm(policy~lawrence + obergefell + evangelical_pop+ nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_data, family = binomial) 
 ```
@@ -100,5 +100,19 @@ summary(negative_primary)
 negative_secondary <- glm(policy~lawrence + obergefell + evangelical_pop +nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_neg, family = binomial)
 
 summary(negative_secondary)
+```
+
+```{r}
+## make is <3 beautiful <3
+
+stargazer(primary_model, secondary_model, simplest_model, simplest_model2, type="text", out ="simple_models.docx") ## gorgeous
+
+stargazer(law_only, law_evan, ober_only, ober_evan, type = "text", out = 'single_models.docx')
+
+#stargazer(positive_primary, positive_secondary, positive_simplest, positive_simplest2, type = "text", out = "positive_models.docx")
+
+#stargazer(negative_primary, negative_secondary, negative_simplest, negative_simplest2, type = "text", out = "negative_models.docx") 
+
+## the positive and the negative models won't be pretty ugh
 ```
 

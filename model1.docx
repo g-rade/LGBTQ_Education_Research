@@ -4,51 +4,51 @@
                   ---------------------------
                             policy           
 ---------------------------------------------
-lawrence                   -2.088***         
-                            (0.632)          
+lawrence                   -3.176***         
+                            (0.829)          
                                              
-obergefell                   0.289           
-                            (0.493)          
+obergefell                   0.317           
+                            (0.538)          
                                              
-nbrs_lag                    0.389**          
+nbrs_lag                    0.317*           
                             (0.179)          
                                              
 population_total            0.00000          
                            (0.00000)         
                                              
-pollib_median               0.406*           
-                            (0.210)          
+pollib_median               0.566**          
+                            (0.224)          
                                              
 incomepcap                 0.0001**          
                            (0.00003)         
                                              
-std_bowen1                 -0.799**          
-                            (0.401)          
+std_bowen1                  -0.810*          
+                            (0.418)          
                                              
-std_bowen2                  -0.409*          
-                            (0.214)          
+std_bowen2                 -0.485**          
+                            (0.222)          
                                              
-duration                    -0.415*          
-                            (0.229)          
+duration                    -0.394*          
+                            (0.235)          
                                              
-duration_sq                 0.054*           
-                            (0.029)          
+duration_sq                 0.056*           
+                            (0.030)          
                                              
-duration_cub                -0.002*          
+duration_cub               -0.002**          
                             (0.001)          
                                              
-std_init_use                 0.198           
-                            (0.132)          
+std_init_use                 0.197           
+                            (0.126)          
                                              
-unified                    0.986***          
-                            (0.364)          
+unified                    1.020***          
+                            (0.366)          
                                              
-Constant                   -4.657***         
-                            (0.873)          
+Constant                   -3.817***         
+                            (0.919)          
                                              
 ---------------------------------------------
 Observations                 1,875           
-Log Likelihood             -158.431          
-Akaike Inf. Crit.           344.861          
+Log Likelihood             -156.454          
+Akaike Inf. Crit.           340.908          
 =============================================
 Note:             *p<0.1; **p<0.05; ***p<0.01
