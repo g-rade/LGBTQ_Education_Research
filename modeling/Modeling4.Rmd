@@ -14,3 +14,94 @@ library(reader)
 state_data <- import("risk_states3.csv")
 ```
 
+```{r}
+## primary and secondary full models with interaction between case and evangelical
+
+law_interact <- glm(policy~lawrence*evangelical_pop+ obergefell + nbrs_lag + population_total + pollib_median + incomepcap + unified + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use, data = state_data, family = binomial)
+
+summary(law_interact)
+
+ober_interact <- glm(policy~lawrence+ evangelical_pop*obergefell + nbrs_lag + population_total + pollib_median + incomepcap + unified + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use, data = state_data, family = binomial)
+
+summary(ober_interact)
+```
+
+```{r}
+## simpler models with interaction
+
+simplest_inter <- glm(policy~obergefell+lawrence*evangelical_pop, data = state_data, family = binomial)
+
+summary(simplest_inter)
+
+law_evan_inter <- glm(policy~lawrence+ evangelical_pop, data = state_data, family = binomial)
+
+summary(law_evan_inter)
+
+
+ober_evan_inter <- glm(policy~obergefell+ evangelical_pop, data = state_data, family = binomial)
+
+summary(ober_evan_inter)
+```
+
+```{r}
+## random effects without interaction
+
+primary_random <-  glm(policy~lawrence + obergefell + category + nbrs_lag + population_total + pollib_median + incomepcap + + unified + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use, data = state_data, family = binomial)
+
+summary(primary_random) ## why only two categories extra??? halp?? we had five ugghhhhhhhhhhhhhhhhhhhhh
+
+
+secondary_random <- glm(policy~lawrence + obergefell + evangelical_pop + category + nbrs_lag + population_total + pollib_median + incomepcap + unified + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_data, family = binomial) 
+
+summary(secondary_random) 
+```
+
+```{r}
+secondary_random_interact <- glm(policy~lawrence*evangelical_pop+ obergefell + category + nbrs_lag + population_total + pollib_median + incomepcap + unified + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use, data = state_data, family = binomial)
+
+summary(secondary_random_interact)
+```
+
+```{r}
+## positive laws <3
+
+state_pos <- state_data %>% 
+  filter(direction != "N" & direction != "M")
+
+positive_simplest_random <- glm(policy~lawrence + obergefell + category, data = state_pos, family = binomial)
+summary(positive_simplest_random) ## ok now the categories are back what 
+
+positive_simplest2_random <- glm(policy~lawrence * evangelical_pop+ obergefell + category, data = state_pos, family = binomial)
+summary(positive_simplest2_random)
+
+positive_full_random <- glm(policy~lawrence + obergefell + category+ nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_pos, family = binomial)
+
+summary(positive_full_random) ## they're gone again 
+
+positive_secondary_random <- glm(policy~lawrence*evangelical_pop+ obergefell + category +nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_pos, family = binomial)
+
+summary(positive_secondary_random)
+```
+
+
+```{r}
+## negative models <3
+
+state_neg <- state_pos <- state_data %>% 
+  filter(direction != "P" & direction != "M")
+
+negative_simplest_random <- glm(policy~lawrence+obergefell+category, data = state_neg, family = binomial)
+summary(negative_simplest_random)
+
+negative_simplest2_random <- glm(policy~lawrence*evangelical_pop+obergefell+category, data = state_neg, family = binomial)
+summary(negative_simplest2_random)
+
+negative_primary_random <- glm(policy~lawrence + obergefell + category+ nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_neg, family = binomial)
+
+summary(negative_primary_random)
+
+negative_secondary_random <- glm(policy~lawrence * evangelical_pop+ obergefell+ category +nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_neg, family = binomial)
+
+summary(negative_secondary_random)
+```
+

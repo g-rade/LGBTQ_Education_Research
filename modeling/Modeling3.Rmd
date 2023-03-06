@@ -103,7 +103,7 @@ summary(negative_secondary)
 ```
 
 ```{r}
-## make is <3 beautiful <3
+## make it <3 beautiful <3
 
 stargazer(primary_model, secondary_model, simplest_model, simplest_model2, type="text", out ="simple_models.docx") ## gorgeous
 
