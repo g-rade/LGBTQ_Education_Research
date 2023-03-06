@@ -17,7 +17,9 @@ risk_state <- import("datasets/risk_states2.csv")
 
 ```{r}
 ## model 1 of using all the vars Scott told me to
-m1 <- glm(policy~pollib_median+std_bowen1+std_bowen2+std_init_use+
+m1 <- glm(policy~nbrs_lag, family=binomial, data=risk_state)
+
+m1 <- glm(policy~pollib_median+nbrs_lag+std_bowen1+std_bowen2+std_init_use+
 unified+duration+duration_sq+duration_cub, data=risk_state, family=binomial)
 
 summary(m1)
@@ -28,7 +30,7 @@ summary(m1)
 ```{r}
 ## model 2 including before/after lawrence v texas
 m2 <- glm(policy~pollib_median+std_bowen1+std_bowen2+std_init_use+
-unified+duration+duration_sq+duration_cub+lawrence, data=risk_state, family=binomial)
+unified+duration+duration_sq+duration_cub+lawrence+nbrs_lag, data=risk_state, family=binomial)
 
 summary(m2)
 ```
@@ -36,7 +38,7 @@ summary(m2)
 ```{r}
 ## model 3 including before/after obergerfell
 m3 <- glm(policy~pollib_median+std_bowen1+std_bowen2+std_init_use+
-unified+duration+duration_sq+duration_cub+obergefell, data=risk_state, family=binomial)
+unified+duration+duration_sq+duration_cub+obergefell+nbrs_lag, data=risk_state, family=binomial)
 
 summary(m3)
 ```
@@ -45,8 +47,28 @@ summary(m3)
 ## model 4 including both court cases
 
 m4 <- glm(policy~pollib_median+std_bowen1+std_bowen2+std_init_use+
-unified+duration+duration_sq+duration_cub+obergefell+lawrence, data=risk_state, family=binomial)
+unified+duration+duration_sq+duration_cub+obergefell+lawrence+nbrs_lag+poptotal, data=risk_state, family=binomial)
 
 summary(m4)
+```
+```{r}
+### Predicted Prob
+m4 <- glm(policy~pollib_median+nbrs_lag+poptotal, data=risk_state, family=binomial)
+
+### generating sample dataset to plug into our model 
+newdata <- with(risk_state, data.frame(pollib_median=2, poptotal=5646651, nbrs_lag=seq(0, 3, by = 1)))
+
+
+pred <- as.data.frame(predict(m4, newdata, type="response", se.fit=TRUE))
+
+newdata$pred_prob <- pred$fit
+newdata$pred_lower <- pred$fit-(1.96*pred$se.fit)
+newdata$pred_upper <- pred$fit+(1.96*pred$se.fit)
+
+
+ggplot(newdata, aes(x=nbrs_lag, y=pred_prob))+
+geom_ribbon(aes(ymin = pred_lower, ymax = pred_upper),fill = "grey70")+
+  geom_line()
+
 ```
 
