@@ -38,7 +38,7 @@ summary(m5)
 state_data_eha$policyno <- as.factor(state_data_eha$policyno)
 ### if we want to add random effects by policy
 ### with so many policies, this may take a while (usually a few minutes)
-#m2 <- glmer(adoption~ std_population+std_mass_ideology+unified+std_income+ std_legp_squire+ (1|policy), data=state_data_eha, family=binomial)
+m2 <- glmer(adoption~ std_population+std_mass_ideology+unified+std_income+ std_legp_squire+ (1|policy), data=state_data_eha, family=binomial) # change polict to category 
 
 #summary(m2)
 

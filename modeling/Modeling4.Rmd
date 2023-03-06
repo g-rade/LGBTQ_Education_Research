@@ -1,0 +1,16 @@
+---
+title: "Modelin4"
+author: "Grace Rade"
+date: "2023-03-06"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(rio)
+library(haven)
+library(stargazer)
+library(reader)
+
+state_data <- import("risk_states3.csv")
+```
+
