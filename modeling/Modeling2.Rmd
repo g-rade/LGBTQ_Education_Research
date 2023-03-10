@@ -12,7 +12,7 @@ library(haven)
 ```
 
 ```{r}
-risk_state <- import("datasets/risk_states2.csv")
+risk_state <- import("./datasets/risk_states2.csv")
 ```
 
 ```{r}
