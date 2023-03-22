@@ -183,11 +183,6 @@ primary_positive2$obergefell <- as.factor(primary_positive2$obergefell)
 
 positive_secondary_model <- glm(policy~lawrence*evangelical_pop+ obergefell +nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_pos, family = binomial)
 
-<<<<<<< HEAD
-=======
-secondary_positive <-with(state_pos, data.frame(pollib_median=0.435309, population_total= 3642361, incomepcap = 30645.5, std_bowen1 = -0.03011499, std_bowen2 = 0.1457451, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag=seq(0, 3, by = 1), lawrence = 0, obergefell = 0, evangelical_pop = seq(0,50, by=10)))
->>>>>>> 50d425b926f093fa7fef65a3f74312236dc7743c
-
 ## lawrence = 0, obergefell = 0
 secondary_positive <-with(state_pos, data.frame(pollib_median=0.435309, population_total= 3642361, incomepcap = 30645.5, std_bowen1 = -0.03011499, std_bowen2 = 0.1457451, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag=seq(0, 3, by = 1), lawrence = 0, obergefell = 0, evangelical_pop = seq(0,50, by=15)))
 
@@ -244,11 +239,8 @@ negative_constants <- state_neg %>%
 
 negative_primary_model <- glm(policy~lawrence + obergefell + nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_neg, family = binomial)
 
-<<<<<<< HEAD
 
 ## lawrence = 0, obergefell = 0
-=======
->>>>>>> 50d425b926f093fa7fef65a3f74312236dc7743c
 primary_negative <-with(state_neg, data.frame(pollib_median=-0.168494, population_total=2933904, incomepcap = 28702, std_bowen1 = -0.3028264, std_bowen2 = 0.1504067, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag=seq(0, 3, by = 1), lawrence = 0, obergefell = 0))
 
 neg_preds <- as.data.frame(predict(negative_primary_model, primary_negative, type="response", se.fit=TRUE))
@@ -286,16 +278,12 @@ primary_negative2$obergefell <- as.factor(primary_negative2$obergefell)
 
 
 ## secondary model w/o category
-
 negative_secondary_model <- glm(policy~lawrence * evangelical_pop+ obergefell+nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_neg, family = binomial)
 
 
-<<<<<<< HEAD
 ## lawrence = 0, obergefell = 0
 secondary_negative <-with(state_neg, data.frame(pollib_median=-0.168494, population_total=2933904, incomepcap = 28702, std_bowen1 = -0.3028264, std_bowen2 = 0.1504067, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag=seq(0, 3, by = 1), lawrence = 0, obergefell = 0, evangelical_pop = seq(0,50, by=15)))
-=======
-secondary_negative <-with(state_neg, data.frame(pollib_median=-0.168494, population_total=2933904, incomepcap = 28702, std_bowen1 = -0.3028264, std_bowen2 = 0.1504067, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag=seq(0, 3, by = 1), lawrence = 1, obergefell = 0, evangelical_pop = seq(0,50, by=10)))
->>>>>>> 50d425b926f093fa7fef65a3f74312236dc7743c
+
 
 neg_preds3 <- as.data.frame(predict(negative_secondary_model, secondary_negative, type="response", se.fit=TRUE))
 
