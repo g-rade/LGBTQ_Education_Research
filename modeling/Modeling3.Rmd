@@ -31,7 +31,7 @@ stargazer(primary_model, type="text", out ="model1.docx")
 
 
 
-secondary_model <- glm(policy~lawrence + obergefell + evangelical_pop+ nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_data, family = binomial) 
+secondary_model <- glm(policy~lawrence*evangelical_pop+obergefell+ nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_data, family = binomial) 
 ```
 
 ```{r}
@@ -41,7 +41,7 @@ summary(simplest_model)
 
 
 ## just hte court cases and evangelical
-simplest_model2 <- glm(policy~obergefell+lawrence+evangelical_pop, data = state_data, family = binomial)
+simplest_model2 <- glm(policy~obergefell+lawrence*evangelical_pop, data = state_data, family = binomial)
 summary(simplest_model2)
 
 
@@ -78,7 +78,7 @@ positive_primary <- glm(policy~lawrence + obergefell + nbrs_lag + population_tot
 
 summary(positive_primary)
 
-positive_secondary <- glm(policy~lawrence + obergefell + evangelical_pop +nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_pos, family = binomial)
+positive_secondary <- glm(policy~lawrence*evangelical_pop + obergefell + nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_pos, family = binomial)
 
 summary(positive_secondary)
 ```
@@ -97,7 +97,7 @@ negative_primary <- glm(policy~lawrence + obergefell + nbrs_lag + population_tot
 
 summary(negative_primary)
 
-negative_secondary <- glm(policy~lawrence + obergefell + evangelical_pop +nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_neg, family = binomial)
+negative_secondary <- glm(policy~lawrence*evangelical_pop+ obergefell +nbrs_lag + population_total + pollib_median + incomepcap + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_neg, family = binomial)
 
 summary(negative_secondary)
 ```
@@ -118,6 +118,9 @@ positive_simplest2, type = "text", out = "positive_models.docx")
 ```
 
 ```{r}
-stargazer(primary_model, simplest_model, positive_primary, negative_primary, type = "text", out = "primary_models.txt" )
+stargazer(primary_model, simplest_model, positive_primary, negative_primary, type = "text", out = "primary_models.txt")
+
+stargazer(secondary_model, simplest_model2, positive_secondary, negative_secondary, type = "text", out = "secondary_models.txt")
+
 ```
 
