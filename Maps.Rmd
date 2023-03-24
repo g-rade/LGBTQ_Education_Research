@@ -31,7 +31,7 @@ risk_set <- read.csv("datasets/all_risk_set.csv") %>%
   summarize(NumTot = sum(Policy)) ## get the number of policies enacted by a state
 
 risk_set_pos <- read.csv("datasets/all_risk_set.csv") %>% 
-  filter(Direction == "P" | Direction == NA) %>% 
+  filter(Direction == "P" | is.na(Direction)) %>% 
   group_by(State) %>% 
   summarize(NumPos = sum(Policy)) %>% 
   full_join(states)  
@@ -39,7 +39,7 @@ risk_set_pos <- read.csv("datasets/all_risk_set.csv") %>%
 risk_set_pos$NumPos[is.na(risk_set_pos$NumPos)] <- 0
 
 risk_set_neg <- read.csv("datasets/all_risk_set.csv") %>% 
-  filter(Direction == "N" | Direction == NA) %>% 
+  filter(Direction == "N" | is.na(Direction)) %>% 
   group_by(State) %>% 
   summarize(NumNeg = sum(Policy)) %>% 
   full_join(states)  
