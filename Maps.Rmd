@@ -1,0 +1,71 @@
+---
+title: "Maps"
+author: "Grace Rade"
+date: "2023-03-24"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(sf)
+library(readr)
+library(urbnmapr)
+library(wesanderson)
+```
+
+```{r}
+## loading in the map of the US and convert to an sf object
+USA_map <-  maps::map("state", plot = FALSE, fill = TRUE)
+
+USA_sf <-  st_read("States_shapefile/States_shapefile.shp") %>% 
+  mutate(State = str_to_title(State_Name)) %>% 
+  st_as_sf(crs = 4326)
+
+## states only for merging later
+states <- read.csv("datasets/all_risk_set.csv") %>% 
+  select(State) %>% 
+  unique() ## only one of each plz
+
+## finding the number of policies enacted by each state for total and direction
+risk_set <- read.csv("datasets/all_risk_set.csv") %>% 
+  group_by(State) %>% 
+  summarize(NumTot = sum(Policy)) ## get the number of policies enacted by a state
+
+risk_set_pos <- read.csv("datasets/all_risk_set.csv") %>% 
+  filter(Direction == "P" | Direction == NA) %>% 
+  group_by(State) %>% 
+  summarize(NumPos = sum(Policy)) %>% 
+  full_join(states)  
+
+risk_set_pos$NumPos[is.na(risk_set_pos$NumPos)] <- 0
+
+risk_set_neg <- read.csv("datasets/all_risk_set.csv") %>% 
+  filter(Direction == "N" | Direction == NA) %>% 
+  group_by(State) %>% 
+  summarize(NumNeg = sum(Policy)) %>% 
+  full_join(states)  
+
+risk_set_neg$NumNeg[is.na(risk_set_neg$NumNeg)] <- 0
+
+## bring it all together bby
+risks_total <- risk_set %>% 
+  full_join(risk_set_pos) %>% 
+  full_join(risk_set_neg)
+```
+
+```{r}
+## joinging the datasets; it's all coming together now
+state_risks <- risks_total %>% 
+  left_join(USA_sf) %>% 
+  as.data.frame()
+```
+
+```{r}
+
+## making the map bby
+ggplot(data = state_risks, aes(geometry = geometry)) +
+  geom_sf(mapping = aes(fill = as.factor(NumTot)), color = "#ffffff") + labs(fill = "Nummber of Policies") +
+  scale_fill_manual(palette = wes_palette("Darjeeling1", 5, type = "discrete"))
+
+## jesus this won't work ugghhhhhhhhhhhhhhhhhhhhhhhhh
+```
+

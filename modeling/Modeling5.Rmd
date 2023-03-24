@@ -12,13 +12,15 @@ library(stargazer)
 library(reader)
 
 state_data <- import("./datasets/risk_states3.csv")
+
+## vary only one variable (set neighbors to a thing)
 ```
 
 ```{r}
 ## making new data for predicted prob, primary model total
 constants <- state_data %>% 
   na.omit() %>% 
-  summarize(pop_med = median(population_total), pollib_med = median(pollib_median), income_med = median(incomepcap), bowen1_med = median(std_bowen1), bowen2_med = median(std_bowen2), duration_med = median(duration), duration_sq_med = median(duration_sq), duration_cub_med = median(duration_cub), init_med = median(std_init_use), evang_med = median(evangelical_pop))
+  summarize(pop_med = median(population_total), pollib_med = median(pollib_median), income_med = median(incomepcap), bowen1_med = median(std_bowen1), bowen2_med = median(std_bowen2), duration_med = median(duration), duration_sq_med = median(duration_sq), duration_cub_med = median(duration_cub), init_med = median(std_init_use), evang_med = median(evangelical_pop), nbrs_med = mean(nbrs_lag, na.omit = T)) ## nbrs median is 0?
 ```
 
 ```{r}

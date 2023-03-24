@@ -50,6 +50,9 @@ primary_random <-  glm(policy~lawrence + obergefell + category + nbrs_lag + popu
 
 summary(primary_random) ## why only two categories extra??? halp?? we had five ugghhhhhhhhhhhhhhhhhhhhh
 
+primary_simplest_random <- glm(policy~lawrence+obergefell+category, state_data, family = binomial)
+
+summary(primary_simplest_random)
 
 secondary_random <- glm(policy~lawrence + obergefell + evangelical_pop + category + nbrs_lag + population_total + pollib_median + incomepcap + unified + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use + unified, data = state_data, family = binomial) 
 
@@ -60,6 +63,10 @@ summary(secondary_random)
 secondary_random_interact <- glm(policy~lawrence*evangelical_pop+ obergefell + category + nbrs_lag + population_total + pollib_median + incomepcap + unified + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use, data = state_data, family = binomial)
 
 summary(secondary_random_interact)
+
+secondary_simplest_random_interact <- glm(policy~lawrence*evangelical_pop+obergefell+category, state_data, family = binomial)
+
+summary(secondary_simplest_random_interact)
 ```
 
 ```{r}
