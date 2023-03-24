@@ -16,17 +16,21 @@ library(wesanderson)
 ## loading in the map of the US and convert to an sf object
 USA_map <-  maps::map("state", plot = FALSE, fill = TRUE)
 
-USA_sf <-  st_read("States_shapefile/States_shapefile.shp") %>% 
-  mutate(State = str_to_title(State_Name)) %>% 
-  st_as_sf(crs = 4326)
+USA_sf <- USA_map %>% 
+  st_as_sf(crs = 4326) %>% 
+  mutate(State = str_to_title(ID))
+
+## load in the dataset
+
+data <- read.csv("datasets/all_risk_set.csv")
 
 ## states only for merging later
-states <- read.csv("datasets/all_risk_set.csv") %>% 
-  select(State) %>% 
-  unique() ## only one of each plz
+states <- data %>% 
+  distinct(State)
+ ## only one of each plz
 
 ## finding the number of policies enacted by each state for total and direction
-risk_set <- read.csv("datasets/all_risk_set.csv") %>% 
+risk_set <- data %>% 
   group_by(State) %>% 
   summarize(NumTot = sum(Policy)) ## get the number of policies enacted by a state
 
@@ -62,10 +66,20 @@ state_risks <- risks_total %>%
 ```{r}
 
 ## making the map bby
-ggplot(data = state_risks, aes(geometry = geometry)) +
-  geom_sf(mapping = aes(fill = as.factor(NumTot)), color = "#ffffff") + labs(fill = "Nummber of Policies") +
-  scale_fill_manual(palette = wes_palette("Darjeeling1", 5, type = "discrete"))
+ggplot(data = state_risks, aes(geometry = geom)) +
+  geom_sf(mapping = aes(fill = NumTot), color = "#ffffff") + labs(fill = "Nummber of Policies") +
+  ggtitle("Total Number of LGBTQ Education Policies 1987-2022")
 
 ## jesus this won't work ugghhhhhhhhhhhhhhhhhhhhhhhhh
+
+## positive policies
+ggplot(data = state_risks, aes(geometry = geom)) +
+  geom_sf(mapping = aes(fill = NumPos), color = "#ffffff") + labs(fill = "Nummber of Policies") +
+  ggtitle("Total Number of Positive LGBTQ Education Policies 1987-2022")
+
+## negative policies
+ggplot(data = state_risks, aes(geometry = geom)) +
+  geom_sf(mapping = aes(fill = NumNeg), color = "#ffffff") + labs(fill = "Nummber of Policies") +
+  ggtitle("Total Number of Negative LGBTQ Education Policies 1987-2022")
 ```
 

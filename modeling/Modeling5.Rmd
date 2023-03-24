@@ -383,9 +383,9 @@ These two code chunks are the same and I don't know what they are here for
 ## interaction vary (what)
 secondary_interact <- glm(policy~lawrence*evangelical_pop+ obergefell + nbrs_lag + population_total + pollib_median + incomepcap + unified + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use, data = state_data, family = binomial)
 
-secondary_negative <-with(secondary_interact, data.frame(pollib_median=-0.168494, population_total=2933904, incomepcap = 28702, std_bowen1 = -0.3028264, std_bowen2 = 0.1504067, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag=seq(0, 3, by = 1), lawrence = 0, obergefell = 0, evangelical_pop = seq(0,50, by=10)))
+secondary_negative <-with(secondary_interact, data.frame(pollib_median=-0.168494, population_total=2933904, incomepcap = 28702, std_bowen1 = -0.3028264, std_bowen2 = 0.1504067, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag=2, lawrence = 0, obergefell = 0, evangelical_pop = seq(0,50, by=10)))
 
-secondary_negative1 <-with(secondary_interact, data.frame(pollib_median=-0.168494, population_total=2933904, incomepcap = 28702, std_bowen1 = -0.3028264, std_bowen2 = 0.1504067, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag=seq(0, 3, by = 1), lawrence = 1, obergefell = 0, evangelical_pop = seq(0,50, by=10)))
+secondary_negative1 <-with(secondary_interact, data.frame(pollib_median=-0.168494, population_total=2933904, incomepcap = 28702, std_bowen1 = -0.3028264, std_bowen2 = 0.1504067, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag=2, lawrence = 1, obergefell = 0, evangelical_pop = seq(0,50, by=10)))
 
 secondary_negative<- rbind(secondary_negative, secondary_negative1)
 
@@ -397,9 +397,11 @@ secondary_negative$pred_lower <- neg_preds2$fit-(1.96*neg_preds2$se.fit)
 secondary_negative$pred_upper <- neg_preds2$fit+(1.96*neg_preds2$se.fit)
 
 secondary_negative$lawrence<- as.factor(secondary_negative$lawrence)
+secondary_negative$obergefell<- as.factor(secondary_negative$obergefell)
 
 ggplot(secondary_negative, aes(x=evangelical_pop, y=pred_prob, color=lawrence)) +geom_smooth(method="lm")
 
+## use this code as a model for 
 ```
 
 ```{r}
