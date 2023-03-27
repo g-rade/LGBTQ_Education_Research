@@ -118,9 +118,9 @@ positive_simplest2, type = "text", out = "positive_models.docx")
 ```
 
 ```{r}
-stargazer(primary_model, simplest_model, positive_primary, negative_primary, type = "text", out = "primary_models.txt")
+stargazer(primary_model, simplest_model, positive_primary, negative_primary, type = "html", out = "primary_models.html") ## change to HTML to render and take a screenshot
 
-stargazer(secondary_model, simplest_model2, positive_secondary, negative_secondary, type = "text", out = "secondary_models.txt")
+stargazer(secondary_model, simplest_model2, positive_secondary, negative_secondary, type = "html", out = "secondary_models.html") ## change to HTML to render and take a screenshot
 
 ```
 
