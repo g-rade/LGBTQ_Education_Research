@@ -10,6 +10,7 @@ library(sf)
 library(readr)
 library(urbnmapr)
 library(wesanderson)
+library(usmap)
 ```
 
 ```{r}
@@ -53,7 +54,8 @@ risk_set_neg$NumNeg[is.na(risk_set_neg$NumNeg)] <- 0
 ## bring it all together bby
 risks_total <- risk_set %>% 
   full_join(risk_set_pos) %>% 
-  full_join(risk_set_neg)
+  full_join(risk_set_neg) %>% 
+  rename(state = "State")
 ```
 
 ```{r}
@@ -81,5 +83,24 @@ ggplot(data = state_risks, aes(geometry = geom)) +
 ggplot(data = state_risks, aes(geometry = geom)) +
   geom_sf(mapping = aes(fill = NumNeg), color = "#ffffff") + labs(fill = "Nummber of Policies") +
   ggtitle("Total Number of Negative LGBTQ Education Policies 1987-2022")
+```
+
+```{r}
+## new maps with the different package, includes alaska and hawaii
+
+plot_usmap(region = "states", data = risks_total, values = 'NumTot') + 
+  scale_fill_continuous(name = "Number of Policies", low = "#56B1F7", high = "#132B43") +
+  labs(title =  "Total Number of LGBTQ Education Policy Adoptions by State") +
+  theme(legend.position = "right") ## i did some googling to find the exact colors, source: https://ggplot2.tidyverse.org/reference/scale_gradient.html for the default values to switch them so lighter is less
+
+plot_usmap(region = "states", data = risks_total, values = 'NumPos') + 
+  scale_fill_continuous(name = "Number of Policies", low = "#56B1F7", high = "#132B43") +
+  labs(title =  "Total Number of Positive LGBTQ Education Policy Adoptions by State") +
+  theme(legend.position = "right") ## positive policies
+
+plot_usmap(region = "states", data = risks_total, values = 'NumNeg') + 
+  scale_fill_continuous(name = "Number of Policies", low = "#56B1F7", high = "#132B43") +
+  labs(title =  "Total Number of Negative LGBTQ Education Policy Adoptions by State") +
+  theme(legend.position = "right") ## negative policies
 ```
 
