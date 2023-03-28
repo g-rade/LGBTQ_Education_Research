@@ -34,7 +34,7 @@ summary(primary)
 
 ## lawrence = 0, 1, obergefell = 0
 primary_total <- with(state_data, data.frame(pollib_median=0.330086, population_total=
-3591363, incomepcap = 30056, std_bowen1 = -0.1149914, std_bowen2 = 0.1547105, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag= 2, lawrence = seq(0,1, by = 1), obergefell = 0)) 
+3591363, incomepcap = 30056, std_bowen1 = -0.1149914, std_bowen2 = 0.1547105, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag= 2, lawrence = seq(0,1, by = 1), obergefell = seq(0, 1, by =1))) 
 
 pred <- as.data.frame(predict(primary, primary_total, type="response", se.fit=TRUE)) 
 
@@ -67,8 +67,11 @@ primary_total1$pred_upper <- pred1$fit+(1.96*pred$se.fit)
 primary_total1$lawrence <- as.factor(primary_total1$lawrence)
 primary_total1$obergefell <- as.factor(primary_total1$obergefell)
 
+primary_total2 <- full_join(primary_total, primary_total1) %>%
+  filter(row_number() != 4)
+
 ## plot it with obergefell on the x, not really sure what these plots mean
-ggplot(primary_total1, aes(x=obergefell, y=pred_prob))+
+ggplot(primary_total2, aes(x=lawrence, y=pred_prob))+
 geom_ribbon(aes(ymin = pred_lower, ymax = pred_upper),fill = "grey70")+
   geom_point() +
   geom_errorbar(aes(ymin = pred_lower, ymax = pred_upper))
@@ -378,7 +381,7 @@ secondary_negative2$obergefell <- as.factor(secondary_negative2$obergefell)
 ```
 
 
-These two code chunks are the same and I don't know what they are here for 
+
 ```{r}
 ## interaction vary (what)
 secondary_interact <- glm(policy~lawrence*evangelical_pop+ obergefell + nbrs_lag + population_total + pollib_median + incomepcap + unified + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use, data = state_data, family = binomial)
@@ -399,18 +402,21 @@ secondary_negative$pred_upper <- neg_preds2$fit+(1.96*neg_preds2$se.fit)
 secondary_negative$lawrence<- as.factor(secondary_negative$lawrence)
 secondary_negative$obergefell<- as.factor(secondary_negative$obergefell)
 
-ggplot(secondary_negative, aes(x=evangelical_pop, y=pred_prob, color=lawrence)) +geom_smooth(method="lm")
+## secondary plot for 
+ggplot(secondary_negative, aes(x=evangelical_pop, y=pred_prob, color=lawrence))+
+  geom_smooth(method="lm") +
+  labs(title = "Predicted Probability of a Negative Adoption by Evangelical Population and Lawrence v. Texas", x = "Evangelical Population", y = "Predicted Probability of Adoption", color = "Lawrence v. Texas")
 
 ## use this code as a model for 
 ```
 
 ```{r}
-## interaction vary (what)
+## interaction vary for obergefell
 secondary_interact <- glm(policy~lawrence*evangelical_pop+ obergefell + nbrs_lag + population_total + pollib_median + incomepcap + unified + std_bowen1 + std_bowen2 + duration + duration_sq + duration_cub + std_init_use, data = state_data, family = binomial)
 
-secondary_negative <-with(secondary_interact, data.frame(pollib_median=-0.168494, population_total=2933904, incomepcap = 28702, std_bowen1 = -0.3028264, std_bowen2 = 0.1504067, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag=seq(0, 3, by = 1), lawrence = 0, obergefell = 0, evangelical_pop = seq(0,50, by=10)))
+secondary_negative <-with(secondary_interact, data.frame(pollib_median=-0.168494, population_total=2933904, incomepcap = 28702, std_bowen1 = -0.3028264, std_bowen2 = 0.1504067, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag=2, lawrence = 1, obergefell = 0, evangelical_pop = seq(0,50, by=10)))
 
-secondary_negative1 <-with(secondary_interact, data.frame(pollib_median=-0.168494, population_total=2933904, incomepcap = 28702, std_bowen1 = -0.3028264, std_bowen2 = 0.1504067, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag=seq(0, 3, by = 1), lawrence = 1, obergefell = 0, evangelical_pop = seq(0,50, by=10)))
+secondary_negative1 <-with(secondary_interact, data.frame(pollib_median=-0.168494, population_total=2933904, incomepcap = 28702, std_bowen1 = -0.3028264, std_bowen2 = 0.1504067, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag=2, lawrence = 1, obergefell = 1, evangelical_pop = seq(0,50, by=10)))
 
 secondary_negative<- rbind(secondary_negative, secondary_negative1)
 
@@ -422,8 +428,12 @@ secondary_negative$pred_lower <- neg_preds2$fit-(1.96*neg_preds2$se.fit)
 secondary_negative$pred_upper <- neg_preds2$fit+(1.96*neg_preds2$se.fit)
 
 secondary_negative$lawrence<- as.factor(secondary_negative$lawrence)
+secondary_negative$obergefell<- as.factor(secondary_negative$obergefell)
 
-ggplot(secondary_negative, aes(x=evangelical_pop, y=pred_prob, color=lawrence)) +geom_smooth(method="lm")
+## secondary plot for obergefell, exported for paper
+ggplot(secondary_negative, aes(x=evangelical_pop, y=pred_prob, color=obergefell)) +
+  geom_smooth(method="lm") +
+  labs(title = "Predicted Probability of Adoption by Evangelical Population and Obergefell", x = "Evangelical Population", y = "Predicted Probability of Adoption", color = "Obergefell v. Hodges")
 
 ```
 
