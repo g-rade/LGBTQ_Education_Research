@@ -94,8 +94,8 @@ secondary_total <- with(state_data, data.frame(pollib_median=0.330086, populatio
 pred3 <- as.data.frame(predict(secondary_interact, secondary_total, type="response", se.fit=TRUE))
 
 secondary_total$pred_prob <- pred3$fit
-secondary_total$pred_lower <- pred3$fit-(1.96*pred$se.fit)
-secondary_total$pred_upper <- pred3$fit+(1.96*pred$se.fit)
+secondary_total$pred_lower <- pred3$fit-(1.96*pred3$se.fit)
+secondary_total$pred_upper <- pred3$fit+(1.96*pred4$se.fit)
 
 secondary_total$lawrence <- as.factor(secondary_total$lawrence)
 secondary_total$obergefell <- as.factor(secondary_total$obergefell)
@@ -109,8 +109,8 @@ secondary_total1 <- with(state_data, data.frame(pollib_median=0.330086, populati
 pred4 <- as.data.frame(predict(secondary_interact, secondary_total1, type="response", se.fit=TRUE))
 
 secondary_total1$pred_prob <- pred4$fit
-secondary_total1$pred_lower <- pred4$fit-(1.96*pred$se.fit)
-secondary_total1$pred_upper <- pred4$fit+(1.96*pred$se.fit)
+secondary_total1$pred_lower <- pred4$fit-(1.96*pred4$se.fit)
+secondary_total1$pred_upper <- pred4$fit+(1.96*pred4$se.fit)
 
 secondary_total1$lawrence <- as.factor(secondary_total1$lawrence)
 secondary_total1$obergefell <- as.factor(secondary_total1$obergefell)
@@ -118,7 +118,7 @@ secondary_total1$obergefell <- as.factor(secondary_total1$obergefell)
 secondary_total_full <- full_join(secondary_total, secondary_total1)
 
 ggplot(secondary_total_full, aes(x = evangelical_pop, y = pred_prob, color = lawrence)) + geom_smooth(method = "lm") +
-  labs(y = "Predicted Probability of Adoption", x = "Evangelical Population", color = "Lawrence v. Texas", title = "Predicted Probability of Total Adoption by Evangelical Population and Lawrece v. Texas")
+  labs(y = "Predicted Probability of Adoption", x = "Evangelical Population", color = "Lawrence v. Texas")
 
 
 ## lawrence = 1, obergefell = 1 (do I need to keep this?)
