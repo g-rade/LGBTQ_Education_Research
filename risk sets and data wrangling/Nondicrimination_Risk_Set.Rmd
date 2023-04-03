@@ -32,5 +32,11 @@ nondiscrimination_risk_set$Category[is.na(nondiscrimination_risk_set$Category)] 
 
 ```{r}
 export(nondiscrimination_risk_set, "nondicrimination_risk_set.csv")
+
+
+laws <- read.csv("datasets/Laws_Policies.csv") %>% 
+  filter(Policy == 1) %>% 
+  group_by(Direction) %>% 
+  summarize(sum(Policy))
 ```
 

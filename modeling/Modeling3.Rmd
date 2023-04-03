@@ -122,5 +122,10 @@ stargazer(primary_model, simplest_model, positive_primary, negative_primary, typ
 
 stargazer(secondary_model, simplest_model2, positive_secondary, negative_secondary, type = "html", out = "secondary_models.html") ## change to HTML to render and take a screenshot
 
+htmlreg(list(primary_model, simplest_model, positive_primary, negative_primary), file="primary_models.doc", center = TRUE, 
+        custom.coef.names=c("Intercept", "Dif Turnout",
+                            "Dif Dem Vote", "Dif Policy Conservatism","Dif Pop","Dif Leg Prof", "Dif Inc",
+                            "Dif Per White", "Dif Urban", "Contiguous",
+                            "Conservatism", "Dem Vote Share", "Initiative", "Election Performance Index", "In-degree Popularity"))
 ```
 

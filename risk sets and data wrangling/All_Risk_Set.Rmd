@@ -34,3 +34,10 @@ all_risk_set <- distinct(all_risk_set)
 export(all_risk_set, "all_risk_set.csv")
 ```
 
+```{r}
+all_risk_set %>% 
+  filter(Policy == 1) %>% 
+  group_by(Category) %>% 
+  summarize(sum(Policy), min(as.numeric(Year)), max(as.numeric(Year)))
+```
+
