@@ -10,6 +10,7 @@ library(rio)
 library(haven)
 library(stargazer)
 library(reader)
+library(texreg)
 
 state_data <- import("./datasets/risk_states3.csv")
 ```
@@ -118,14 +119,12 @@ positive_simplest2, type = "text", out = "positive_models.docx")
 ```
 
 ```{r}
-stargazer(primary_model, simplest_model, positive_primary, negative_primary, type = "html", out = "primary_models.html") ## change to HTML to render and take a screenshot
+stargazer(primary_model, simplest_model, positive_primary, negative_primary, type = "html", out = "primary_models2.html", column.labels = c("Full Primary ", "Reduced Primary ", "Positive Primary ", "Negative Primary "), covariate.labels = c("Lawrence", "Obergefell", "Neighbor Adoptions", " Population","Policy Liberalisl","Per Capita Income", "Legislative Professionalism 1",
+"Legislative Professionalism 2", "Duration", "Duration Sq.", "Duration Cub.", "Initiative Use", "Unified Government", "Intercept"), dep.var.labels = "Probability of Adoption", title = "Primary Model Results") ## change to HTML to render and take a screenshot
 
-stargazer(secondary_model, simplest_model2, positive_secondary, negative_secondary, type = "html", out = "secondary_models.html") ## change to HTML to render and take a screenshot
+stargazer(secondary_model, simplest_model2, positive_secondary, negative_secondary, type = "html", out = "secondary_models2.html", column.labels = c("Full Secondary", "Reduced Secondary", "Positive Secondary", "Negative Secondary"), covariate.labels = c("Lawrence", "Evangelical Population", "Obergefell", "Neighbor Adoptions", " Population","Policy Liberalisl","Per Capita Income", "Legislative Professionalism 1", "Legislative Professionalism 2", "Duration", "Duration Sq.", "Duration Cub.", "Initiative Use", "Unified Government", "Lawrence*Evangelical Population", "Intercept"), dep.var.labels = "Probability of Adoption", title = "Secondary Model Results") ## change to HTML to render and take a screenshot
 
-htmlreg(list(primary_model, simplest_model, positive_primary, negative_primary), file="primary_models.doc", center = TRUE, 
-        custom.coef.names=c("Intercept", "Dif Turnout",
-                            "Dif Dem Vote", "Dif Policy Conservatism","Dif Pop","Dif Leg Prof", "Dif Inc",
-                            "Dif Per White", "Dif Urban", "Contiguous",
-                            "Conservatism", "Dem Vote Share", "Initiative", "Election Performance Index", "In-degree Popularity"))
+
+
 ```
 
