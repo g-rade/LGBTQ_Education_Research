@@ -125,6 +125,5 @@ stargazer(primary_model, simplest_model, positive_primary, negative_primary, typ
 stargazer(secondary_model, simplest_model2, positive_secondary, negative_secondary, type = "html", out = "secondary_models2.html", column.labels = c("Full Secondary", "Reduced Secondary", "Positive Secondary", "Negative Secondary"), covariate.labels = c("Lawrence", "Evangelical Population", "Obergefell", "Neighbor Adoptions", " Population","Policy Liberalisl","Per Capita Income", "Legislative Professionalism 1", "Legislative Professionalism 2", "Duration", "Duration Sq.", "Duration Cub.", "Initiative Use", "Unified Government", "Lawrence*Evangelical Population", "Intercept"), dep.var.labels = "Probability of Adoption", title = "Secondary Model Results") ## change to HTML to render and take a screenshot
 
 
-
 ```
 
