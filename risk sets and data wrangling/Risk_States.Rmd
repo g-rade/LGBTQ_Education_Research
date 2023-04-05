@@ -16,7 +16,7 @@ all_risk_set <- read.csv("./datasets/all_risk_set.csv") %>%
 
 state_data <- read_csv("./datasets/risk_states1.csv")
 
-state_data2 <- read_dta("./expanded_years.dta") %>% 
+state_data2 <- read_dta("./datasets/expanded_years.dta") %>% 
   mutate(incomepcap = floor(income))
   
 
@@ -53,7 +53,8 @@ risk_state <- all_risk_set %>%
 
 risk_state <- risk_state %>% 
   left_join(evang) %>% 
-  select(state, statename, year, policy, category, direction, adoption_year, population_total, pollib_median, incomepcap, std_bowen1, std_bowen2, unified, duration, duration_sq, duration_cub, nbrs_lag, nbrs, lawrence, obergefell, std_init_use, evangelical_pop)
+  select(state, statename, year, policy, category, direction, adoption_year, population_total, pollib_median, incomepcap, std_bowen1, std_bowen2, unified, duration, duration_sq, duration_cub, nbrs_lag, nbrs, lawrence, obergefell, std_init_use, evangelical_pop) %>% 
+  filter(year >=1987)
 
 nums <- risk_state %>% 
   filter(is.na(evangelical_pop)) %>% 
@@ -63,6 +64,6 @@ nums <- risk_state %>%
 ```
 
 ```{r}
-export(risk_state, "risk_states3.csv")
+export(risk_state, "risk_states4.csv")
 ```
 
