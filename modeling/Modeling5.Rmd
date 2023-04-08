@@ -34,7 +34,7 @@ summary(primary)
 
 ## lawrence = 0, 1, obergefell = 0
 primary_total <- with(state_data, data.frame(pollib_median=0.330086, population_total=
-3591363, incomepcap = 30056, std_bowen1 = -0.1149914, std_bowen2 = 0.1547105, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag= 2, lawrence = seq(0,1, by = 1), obergefell = seq(0, 1, by =1))) 
+3591363, incomepcap = 30056, std_bowen1 = -0.1149914, std_bowen2 = 0.1547105, duration = 8, duration_sq = 64, duration_cub = 512, std_init_use = -0.4535984, unified = 1, nbrs_lag= 2, lawrence = seq(0,1, by = 1), obergefell = 0)) 
 
 pred <- as.data.frame(predict(primary, primary_total, type="response", se.fit=TRUE)) 
 
