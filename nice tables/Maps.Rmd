@@ -61,7 +61,7 @@ risks_total <- risk_set %>%
 ```{r}
 ## joinging the datasets; it's all coming together now
 state_risks <- risks_total %>% 
-  left_join(USA_sf) %>% 
+  left_join(USA_sf, by = "State") %>% 
   as.data.frame()
 ```
 

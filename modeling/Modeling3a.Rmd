@@ -22,7 +22,7 @@ primary_model <- glm(policy~lawrence + obergefell + nbrs_lag + population_total 
 
 summary(primary_model)
 
-stargazer(primary_model, type="text", out ="model1.docx")
+#stargazer(primary_model, type="text", out ="model1.docx")
 ```
 
 ```{r}
@@ -106,12 +106,12 @@ summary(negative_secondary)
 ```{r}
 ## make it <3 beautiful <3
 
-stargazer(primary_model, secondary_model, simplest_model, simplest_model2, type="text", out ="simple_models.docx") ## gorgeous
+#stargazer(primary_model, secondary_model, simplest_model, simplest_model2, type="text", out ="simple_models.docx") ## gorgeous
 
-stargazer(law_only, law_evan, ober_only, ober_evan, type = "text", out = 'single_models.docx')
+#stargazer(law_only, law_evan, ober_only, ober_evan, type = "text", out = 'single_models.docx')
 
-stargazer(positive_primary, positive_secondary, positive_simplest,
-positive_simplest2, type = "text", out = "positive_models.docx")
+#stargazer(positive_primary, positive_secondary, positive_simplest,
+#positive_simplest2, type = "text", out = "positive_models.docx")
 
 #stargazer(negative_primary, negative_secondary, negative_simplest, negative_simplest2, type = "text", out = "negative_models.docx") 
 
