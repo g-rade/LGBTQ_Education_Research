@@ -1,0 +1,101 @@
+---
+title: "Missingness_Audit"
+author: "Grace Rade"
+date: "2023-05-30"
+output: html_document
+---
+
+```{r}
+## load the current risk set and packages
+
+library(tidyverse)
+library(rio)
+
+state_data <- import("./datasets/risk_states4.csv") ## risk set we used for modeling
+```
+
+covariates: population_total, pollib_median, incomepcap, std_bowen1, std_bowen2, unified, nbrs_lag, nbrs, stf_init_use, evangelical_pop
+
+```{r}
+## check each covariate for min/max year present by state
+
+population_total <- state_data %>% 
+  select(year, statename, population_total) %>% ## select variables of interest
+  group_by(statename) %>% ## group_by state
+  filter(!is.na(population_total)) %>% ## get rid of NA 
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyond 2014
+
+
+pollib_median <- state_data %>% 
+  select(year, statename, pollib_median) %>% 
+  group_by(statename) %>% 
+  filter(!is.na(pollib_median)) %>% 
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyong 2014 (CA 2012)
+
+incomepcap <- state_data %>% 
+  select(year, statename, incomepcap) %>% 
+  group_by(statename) %>% 
+  filter(!is.na(incomepcap)) %>% 
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyond 2010 (2009 NC)
+
+std_bowen1 <- state_data %>% 
+  select(year, statename, std_bowen1) %>% 
+  group_by(statename) %>% 
+  filter(!is.na(std_bowen1)) %>% 
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyond 2016 (2012 for CA, 2009 NC)
+
+std_bowen2 <- state_data %>% 
+  select(year, statename, std_bowen2) %>% 
+  group_by(statename) %>% 
+  filter(!is.na(std_bowen2)) %>% 
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyond 2016 (2012 for CA, 2009 NC)
+
+unified <- state_data %>% 
+  select(year, statename, unified) %>% 
+  group_by(statename) %>% 
+  filter(!is.na(unified)) %>% 
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyind 2014 (2012 CA, 2009 NC, 2016 NE)
+
+nbrs_lag <- state_data %>% 
+  select(year, statename, nbrs_lag) %>% 
+  group_by(statename) %>% 
+  filter(!is.na(nbrs_lag)) %>% 
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyind 2019 (2009 NC, 2012 CA, AL/AK/LA/MD 2022)
+
+nbrs <- state_data %>% 
+  select(year, statename, nbrs) %>% 
+  group_by(statename) %>% 
+  filter(!is.na(nbrs)) %>% 
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyind 2019 (2009 NC, 2012 CA, AL/AK/LA/MD 2022)
+
+std_init_use <- state_data %>% 
+  select(year, statename, std_init_use) %>% 
+  group_by(statename) %>% 
+  filter(!is.na(std_init_use)) %>% 
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyond 2010 (2009 NC)
+
+evangelical_pop <- state_data %>% 
+  select(year, statename, evangelical_pop) %>% 
+  group_by(statename) %>% 
+  filter(!is.na(evangelical_pop)) %>% 
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyond 2019 (2012 CA, 2009 NC, 2020 LA)
+```
+
+```{r}
+## now go through each variable and look at total and for internal missingness
+
+## what I want is to select each covariate and get the missing rows by state (need to distinct, or switch dataset)
+library(haven)
+
+covariate_data <- read_csv("./datasets/risk_states1.csv")
+
+covariate_data2 <- read_dta("./datasets/expanded_years.dta") %>% 
+  mutate(incomepcap = floor(income))
+  
+
+covariate_data <- covariate_data %>% 
+  full_join(covariate_data2) %>% 
+  select(state, statename, year, policy, category, direction, adoption_year, population_total, pollib_median, incomepcap, std_bowen1, std_bowen2, unified, nbrs_lag, nbrs, std_init_use) %>% 
+  filter(year >=1987) ## working on it
+```
+
