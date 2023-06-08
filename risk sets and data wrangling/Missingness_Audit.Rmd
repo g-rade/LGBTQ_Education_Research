@@ -30,7 +30,7 @@ pollib_median <- state_data %>%
   select(year, statename, pollib_median) %>% 
   group_by(statename) %>% 
   filter(!is.na(pollib_median)) %>% 
-  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyong 2014 (CA 2012)
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyong 2014 (CA 2012, 2009 NC)
 
 incomepcap <- state_data %>% 
   select(year, statename, incomepcap) %>% 
@@ -78,13 +78,15 @@ evangelical_pop <- state_data %>%
   select(year, statename, evangelical_pop) %>% 
   group_by(statename) %>% 
   filter(!is.na(evangelical_pop)) %>% 
-  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyond 2019 (2012 CA, 2009 NC, 2020 LA)
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyond 2019 (2012 CA, 2009 NC, 2020 LA), why is this different than the 
 ```
 
 ```{r}
 ## now go through each variable and look at total and for internal missingness
 
 ## what I want is to select each covariate and get the missing rows by state (need to distinct, or switch dataset)
+
+## loading in the covariate data 
 library(haven)
 
 covariate_data <- read_csv("./datasets/risk_states1.csv")
@@ -97,5 +99,95 @@ covariate_data <- covariate_data %>%
   full_join(covariate_data2) %>% 
   select(state, statename, year, policy, category, direction, adoption_year, population_total, pollib_median, incomepcap, std_bowen1, std_bowen2, unified, nbrs_lag, nbrs, std_init_use) %>% 
   filter(year >=1987) ## working on it
+```
+
+```{r}
+## go through the indicidual covariates
+
+population_total2 <- covariate_data %>% 
+  select(year, statename, population_total) %>% ## select variables of interest
+  group_by(statename) %>% ## group_by state
+  filter(is.na(population_total)) ## get rid of NA 
+
+## no missing data in the interim
+
+pollib_median2 <- covariate_data %>% 
+  select(year, statename, pollib_median) %>% 
+  group_by(statename) %>% 
+  filter(is.na(pollib_median))
+
+incomepcap2 <- covariate_data %>% 
+  select(year, statename, incomepcap) %>% 
+  group_by(statename) %>% 
+  filter(is.na(incomepcap))
+
+std_bowen12 <- covariate_data %>% 
+  select(year, statename, std_bowen1) %>% 
+  group_by(statename) %>% 
+  filter(is.na(std_bowen1))
+
+std_bowen22 <- covariate_data %>% 
+  select(year, statename, std_bowen2) %>% 
+  group_by(statename) %>% 
+  filter(is.na(std_bowen2))
+
+unified2 <- covariate_data %>% 
+  select(year, statename, unified) %>% 
+  group_by(statename) %>% 
+  filter(is.na(unified))
+
+nbrs_lag2 <- covariate_data %>% 
+  select(year, statename, nbrs_lag) %>% 
+  group_by(statename) %>% 
+  filter(is.na(nbrs_lag))
+
+nbrs2 <- covariate_data %>% 
+  select(year, statename, nbrs) %>% 
+  group_by(statename) %>% 
+  filter(is.na(nbrs))
+
+std_init_use2 <- covariate_data %>% 
+  select(year, statename, std_init_use) %>% 
+  group_by(statename) %>% 
+  filter(is.na(std_init_use))
+
+```
+
+```{r}
+## evnangelical pop
+
+state_data2 <- read_csv("./datasets/risk_states1.csv") ## original risk set
+
+state_data3 <- read_dta("./datasets/expanded_years.dta") %>% 
+  mutate(incomepcap = floor(income)) ## added data
+  
+
+state_data3 <- state_data3 %>% 
+  full_join(state_data2) ## complete covariate set
+
+evang <- read.csv("./datasets/evangelical_pop data.csv") %>% 
+  select(year, state, evangelical_pop, st) %>% 
+  filter(!is.na(evangelical_pop)) %>% 
+  rename(statename = "state") %>% 
+  rename(state = "st") ## evangelical population data 1
+
+
+evang2 <- import("./datasets/ces_data.dta") %>% 
+  rename(evangelical_pop = "pew_bornagain", statename = 'state_name') %>% 
+  select(year, state, evangelical_pop, statename) %>% 
+  mutate(evangelical_pop = evangelical_pop*100) ## evangelical population2 
+
+state4 <- state_data3 %>% 
+  filter(year == c(2014, 2015)) %>% 
+  select(year, state, statename)  ##get the state name variables
+
+evang2$statename <- str_to_title(evang2$statename)
+evang2 <- evang2 %>% 
+  left_join(state4) ##
+
+evang <- evang %>% 
+  full_join(evang2) %>% 
+  group_by(state)
+
 ```
 
