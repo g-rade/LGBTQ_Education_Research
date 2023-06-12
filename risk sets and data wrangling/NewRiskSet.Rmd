@@ -75,10 +75,13 @@ evangelical1 <- import("./datasets/evangelical_pop data.csv") %>%
 evangelical1 <- evangelical1 %>% 
   full_join(state_names) %>% 
   filter(year >= 1987, state != "DC") %>% 
-  filter(!is.na(evangelical_pop))
+  filter(!is.na(evangelical_pop))  ## trying to get the missing statenames to fill in (failure, why)
 
 risk_set <- risk_set %>% 
   left_join(evangelical1) %>% 
+  select(state, statename, year, policy, category, direction, adoption_year, population_total, pollib_median, incomepcap, std_bowen1, std_bowen2, unified, std_init_use, evangelical_pop) ## covairiates with the names fixed
+
+## export(risk_set, "new_risk.csv")
   
 
 ```
