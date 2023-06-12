@@ -20,36 +20,39 @@ policy_risk_set <- import("./datasets/all_risk_set.csv") %>%
 state_names <- import("./datasets/ces_data.dta") %>% 
   select(-inputstate) %>% 
   rename(evangelical_pop = "pew_bornagain") %>% 
-  mutate(evangelical_pop = as.numeric(evangelical_pop*100), state = str_squish(state), state_name = str_squish(state_name)) ## name file for all 
+  mutate(evangelical_pop = as.numeric(evangelical_pop*100), state = str_squish(state), state_name = str_squish(state_name)) ## name file for all + evangelical data
 
-var_label(state_names$evangelical_pop) <- NULL
-attributes(state_names$year) <- NULL
-state_names$state_name[state_names$state_name == ""] <- NA
+var_label(state_names$evangelical_pop) <- NULL ## get rid of the variable label
+attributes(state_names$year) <- NULL ## remove all attributes
+state_names$state_name[state_names$state_name == ""] <- NA ## sub out empties for NAs
 
 
 #remove_attributes(state_names, "format.stata")
 
 just_names <- state_names %>%
-  select(c(state, state_name))
+  select(c(state, state_name)) ## get just the name variables
 
 names2014 <- state_names %>% 
-  select(state_name) %>% 
+  select(state_name, state) %>% 
   distinct() %>% 
-  mutate(year = 2014) ## filling in the full state names for 2014
+  mutate(year = 2014) %>% 
+  filter(!is.na(state_name)) %>% 
+  filter(state_name != "DISTRICT OF COLUMBIA") ## filling in the full state names for 2014
 
 
 names2015 <- state_names %>% 
-  select(state_name) %>% 
+  select(state_name, state) %>% 
   distinct() %>% 
   mutate(year = 2015) %>% 
-  filter(!is.na(state_name))## filling in the full state names for 2015
+  filter(!is.na(state_name)) %>% 
+  filter(state_name != "DISTRICT OF COLUMBIA") ## filling in the full state names for 2015
 
-state_names <- state_names %>% 
-  full_join(names2014, by = year) %>% 
-  full_join(names2015) %>% 
-  filter(!is.na(state_name))
+#state_names <- state_names %>% 
+ # full_join(names2014) %>% 
+ # full_join(names2015)
 
-race_health <- import("./datasets/race_health_data.dta") ## covariates
+race_health <- import("./datasets/race_health_data.dta") %>% 
+  mutate(state_name = str_squish(toupper(state_name))) ## covariates
 
 expanded_years <- import("./datasets/expanded_years.dta") %>% 
   mutate(incomepcap = floor(income), statenam = str_squish(toupper(statenam))) %>% 
@@ -59,7 +62,7 @@ state_data <- import("./datasets/state_data.dta") %>%
   mutate(state_name = str_squish(toupper(state_name))) ## more covariates
 
 risk_set <- policy_risk_set %>% ## join the risk set to the name file
-  left_join(just_names) %>% ## at this point there are no missing values in the state-name or state variables
+  ## at this point there are no missing values in the state-name or state variables
   left_join(race_health) %>% 
   left_join(expanded_years) ## get all the covariates in
 
@@ -72,7 +75,11 @@ evangelical1 <- import("./datasets/evangelical_pop data.csv") %>%
 evangelical1 <- evangelical1 %>% 
   full_join(state_names) %>% 
   filter(year >= 1987, state != "DC") %>% 
-  filter(!is.na(evangelical_pop)) 
+  filter(!is.na(evangelical_pop))
+
+risk_set <- risk_set %>% 
+  left_join(evangelical1) %>% 
+  
 
 ```
 
