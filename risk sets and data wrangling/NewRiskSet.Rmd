@@ -133,6 +133,62 @@ population2019 <- population2015 %>%
   full_join(population2018) %>% 
   full_join(population22001199) ## got the population data all set for 2015-2019
 
-## export(population2019, "population2015_2019.csv")
+
+population2022 <- read_csv("./datasets/NST-EST2022-ALLDATA.csv") ## population data 2020-2022
+
+population2022 <- population2022 %>% 
+  filter(!row_number() %in% c(1:14)) ## remove rows i don't want
+
+population2022 <- population2022 %>% 
+  filter(!STATE %in% c(11, 72)) %>%  ## get rid of rando rows I don't want
+  clean_names() %>%  
+  rename(state_name = "name", state_num = "state") ## rename vars to match 
+
+population2022 <- population2022 %>% 
+  select(state_num, state_name, popestimate2020, popestimate2021, popestimate2022) %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## get state names all uppsercase to match
+  left_join(unique(just_names))
+
+population2020 <- population2022 %>% 
+  select(state, state_name, popestimate2020) %>% ## select the vars i want
+  rename(population_total = "popestimate2020") %>% ## rename variable
+  mutate(year = 2020) ## add year variable
+
+population2021 <- population2022 %>% 
+  select(state, state_name, popestimate2021) %>% 
+  rename(population_total = "popestimate2021") %>% 
+  mutate(year = 2021)
+
+population2022_2 <- population2022 %>% 
+  select(state, state_name, state_num, popestimate2022) %>% 
+  rename(population_total = "popestimate2022") %>% 
+  mutate(year = 2022)
+
+population2022 <- population2020 %>% 
+  full_join(population2021) %>% 
+  full_join(population2022_2) ##joining 2020, 2021, 2022
+
+population2022 <- population2019 %>% 
+  full_join(population2022) ## joining 2015-2019 with 2020-2022
+
+#export(population2022, "population2015_2019.csv"). ## exporting the dataset
+```
+
+```{r}
+## evangelical population
+
+evangelical2022 <- import("./datasets/CES22_Common.csv") ## evangelical data 2022
+
+evangelical2022 <- evangelical2022 %>% 
+  select(inputstate, pew_bornagain) %>%
+  rename(state_num = 'inputstate') %>% 
+  mutate(state_num = as.character(state_num))
+
+number_of_states <- evangelical2022 %>% 
+  group_by(state_num) %>% 
+  summarize(n())
+
+evangelical2022 <- evangelical2022 %>% 
+  full_join(population2022_2) ## why is this not all of the states (AL, AK, AZ, AR, CA, CO, CT excluded somehow), might be a problem with the merging (cries)
 ```
 
