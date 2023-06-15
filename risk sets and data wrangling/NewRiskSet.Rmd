@@ -92,5 +92,47 @@ risk_set <- risk_set %>%
 library(tidycensus)
 
 population2019 <- read_csv("nst-est2019-alldata.csv") ## population estimates 2010-2019
+
+population2019 <- population2019 %>% 
+  filter(!row_number() %in% c(1:5)) ## get rid of rows I don't want at the top
+
+population2019_2 <- population2019 %>% 
+  filter(!STATE %in% c(11, 72)) %>%  ## get rid of rando rows I don't want
+  clean_names() %>%  
+  rename(state_name = "name", state_num = "state") %>%
+  select(state_num, state_name, popestimate2015, popestimate2016, popestimate2017, popestimate2018, popestimate2019) %>% ## select variables I want
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## get state names all uppsercase to match
+  left_join(unique(just_names)) ## join the state code variable
+
+population2019_2 <- population2019_2 %>% 
+  mutate(year2015 = 2015, year2016 = 2016, year2017 = 2017, year2018 = 2018, year2019 = 2019) ## making the year variable
+
+population2015 <- population2019_2 %>% 
+  select(state, state_name, year2015, popestimate2015) %>% ## select the cols i want
+  rename(year = "year2015", population_total = "popestimate2015") ## rename
+
+population2016 <-  population2019_2 %>% 
+  select(state, state_name, year2016, popestimate2016) %>% 
+  rename(year = "year2016", population_total = "popestimate2016")
+
+population2017 <- population2019_2 %>% 
+  select(state, state_name, year2017, popestimate2017) %>% 
+  rename(year = "year2017", population_total = "popestimate2017")
+
+population2018 <- population2019_2 %>% 
+  select(state, state_name, year2018, popestimate2018) %>% 
+  rename(year = "year2018", population_total = "popestimate2018")
+
+population22001199 <- population2019_2 %>% 
+  select(state, state_name, year2019, popestimate2019) %>% 
+  rename(year = "year2019", population_total = "popestimate2019")
+
+population2019 <- population2015 %>% 
+  full_join(population2016) %>% 
+  full_join(population2017) %>% 
+  full_join(population2018) %>% 
+  full_join(population22001199) ## got the population data all set for 2015-2019
+
+## export(population2019, "population2015_2019.csv")
 ```
 
