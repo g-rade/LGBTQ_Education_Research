@@ -11,7 +11,7 @@ output: html_document
 library(tidyverse)
 library(rio)
 
-state_data <- import("./datasets/risk_states4.csv") ## risk set we used for modeling
+state_data <- import("./datasets/new_risk.csv") ## risk set we used for modeling
 ```
 
 covariates: population_total, pollib_median, incomepcap, std_bowen1, std_bowen2, unified, nbrs_lag, nbrs, stf_init_use, evangelical_pop
@@ -30,55 +30,55 @@ pollib_median <- state_data %>%
   select(year, statename, pollib_median) %>% 
   group_by(statename) %>% 
   filter(!is.na(pollib_median)) %>% 
-  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyong 2014 (CA 2012, 2009 NC)
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyond 2014
 
 incomepcap <- state_data %>% 
   select(year, statename, incomepcap) %>% 
   group_by(statename) %>% 
   filter(!is.na(incomepcap)) %>% 
-  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyond 2010 (2009 NC)
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyond 2010
 
 std_bowen1 <- state_data %>% 
   select(year, statename, std_bowen1) %>% 
   group_by(statename) %>% 
   filter(!is.na(std_bowen1)) %>% 
-  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyond 2016 (2012 for CA, 2009 NC)
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyond 2016
 
 std_bowen2 <- state_data %>% 
   select(year, statename, std_bowen2) %>% 
   group_by(statename) %>% 
   filter(!is.na(std_bowen2)) %>% 
-  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyond 2016 (2012 for CA, 2009 NC)
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyond 2016
 
 unified <- state_data %>% 
   select(year, statename, unified) %>% 
   group_by(statename) %>% 
   filter(!is.na(unified)) %>% 
-  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyind 2014 (2012 CA, 2009 NC, 2016 NE)
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyond 2014 
 
-nbrs_lag <- state_data %>% 
-  select(year, statename, nbrs_lag) %>% 
-  group_by(statename) %>% 
-  filter(!is.na(nbrs_lag)) %>% 
-  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyind 2019 (2009 NC, 2012 CA, AL/AK/LA/MD 2022)
+#nbrs_lag <- state_data %>% 
+  #select(year, statename, nbrs_lag) %>% 
+  #group_by(statename) %>% 
+  #filter(!is.na(nbrs_lag)) %>% 
+ # summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyond 2019 (2009 NC, 2012 CA, AL/AK/LA/MD 2022)
 
-nbrs <- state_data %>% 
-  select(year, statename, nbrs) %>% 
-  group_by(statename) %>% 
-  filter(!is.na(nbrs)) %>% 
-  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyind 2019 (2009 NC, 2012 CA, AL/AK/LA/MD 2022)
+#nbrs <- state_data %>% 
+  #select(year, statename, nbrs) %>% 
+  #group_by(statename) %>% 
+ # filter(!is.na(nbrs)) %>% 
+ # summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyond 2019 (2009 NC, 2012 CA, AL/AK/LA/MD 2022)
 
 std_init_use <- state_data %>% 
   select(year, statename, std_init_use) %>% 
   group_by(statename) %>% 
   filter(!is.na(std_init_use)) %>% 
-  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyond 2010 (2009 NC)
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyond 2010 
 
 evangelical_pop <- state_data %>% 
   select(year, statename, evangelical_pop) %>% 
   group_by(statename) %>% 
   filter(!is.na(evangelical_pop)) %>% 
-  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyond 2019 (2012 CA, 2009 NC, 2020 LA), why is this different than the 
+  summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, beyond 2019 why is this different than the 
 ```
 
 ```{r}
@@ -104,49 +104,49 @@ covariate_data <- covariate_data %>%
 ```{r}
 ## go through the indicidual covariates
 
-population_total2 <- covariate_data %>% 
+population_total2 <- state_data %>% 
   select(year, statename, population_total) %>% ## select variables of interest
   group_by(statename) %>% ## group_by state
   filter(is.na(population_total)) ## get rid of NA 
 
 ## no missing data in the interim
 
-pollib_median2 <- covariate_data %>% 
+pollib_median2 <- state_data %>% 
   select(year, statename, pollib_median) %>% 
   group_by(statename) %>% 
   filter(is.na(pollib_median))
 
-incomepcap2 <- covariate_data %>% 
+incomepcap2 <- state_data %>% 
   select(year, statename, incomepcap) %>% 
   group_by(statename) %>% 
   filter(is.na(incomepcap))
 
-std_bowen12 <- covariate_data %>% 
+std_bowen12 <- state_data %>% 
   select(year, statename, std_bowen1) %>% 
   group_by(statename) %>% 
   filter(is.na(std_bowen1))
 
-std_bowen22 <- covariate_data %>% 
+std_bowen22 <- state_data %>% 
   select(year, statename, std_bowen2) %>% 
   group_by(statename) %>% 
   filter(is.na(std_bowen2))
 
-unified2 <- covariate_data %>% 
+unified2 <- state_data %>% 
   select(year, statename, unified) %>% 
   group_by(statename) %>% 
   filter(is.na(unified))
 
-nbrs_lag2 <- covariate_data %>% 
+nbrs_lag2 <- state_data %>% 
   select(year, statename, nbrs_lag) %>% 
   group_by(statename) %>% 
   filter(is.na(nbrs_lag))
 
-nbrs2 <- covariate_data %>% 
+nbrs2 <- state_data %>% 
   select(year, statename, nbrs) %>% 
   group_by(statename) %>% 
   filter(is.na(nbrs))
 
-std_init_use2 <- covariate_data %>% 
+std_init_use2 <- state_data %>% 
   select(year, statename, std_init_use) %>% 
   group_by(statename) %>% 
   filter(is.na(std_init_use))

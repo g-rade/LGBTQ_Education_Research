@@ -86,3 +86,11 @@ risk_set <- risk_set %>%
 
 ```
 
+```{r}
+## let's see if we can fill anything in now
+
+library(tidycensus)
+
+population2019 <- read_csv("nst-est2019-alldata.csv") ## population estimates 2010-2019
+```
+
