@@ -180,15 +180,33 @@ population2022 <- population2019 %>%
 evangelical2022 <- import("./datasets/CES22_Common.csv") ## evangelical data 2022
 
 evangelical2022 <- evangelical2022 %>% 
-  select(inputstate, pew_bornagain) %>%
+  select(inputstate, pew_bornagain, commonweight) %>%
   rename(state_num = 'inputstate') %>% 
   mutate(state_num = as.character(state_num))
 
+## converting the state numbers to match population df
+evangelical2022$state_num[evangelical2022$state_num == "1"] <- "01"
+evangelical2022$state_num[evangelical2022$state_num == "2"] <- "02"
+evangelical2022$state_num[evangelical2022$state_num == "3"] <- "03"
+evangelical2022$state_num[evangelical2022$state_num == "4"] <- "04"
+evangelical2022$state_num[evangelical2022$state_num == "5"] <- "05"
+evangelical2022$state_num[evangelical2022$state_num == "6"] <- "06"
+evangelical2022$state_num[evangelical2022$state_num == "7"] <- "07"
+evangelical2022$state_num[evangelical2022$state_num == "8"] <- "08"
+evangelical2022$state_num[evangelical2022$state_num == "9"] <- "09"
+
 number_of_states <- evangelical2022 %>% 
-  group_by(state_num) %>% 
-  summarize(n())
+  group_by(as.numeric(state_num)) %>% 
+  summarize(n()) ## checking for stuff idk
 
 evangelical2022 <- evangelical2022 %>% 
   full_join(population2022_2) ## why is this not all of the states (AL, AK, AZ, AR, CA, CO, CT excluded somehow), might be a problem with the merging (cries)
+
+attempted_collapse <- evangelical2022 %>% 
+  group_by(state, pew_bornagain) %>% 
+  summarize(num = n(), weight = mean(commonweight)) %>% ##summarizing the weights (idk if this is right)
+  group_by(state) %>% ##group by state again
+  mutate(total = sum(num), evangelical_pop = (num/(total)*weight*100)) %>% ## get the percent evangelical (idk if this is right)
+  filter(pew_bornagain == "1", !is.na(state)) ## getting rid of NAs and born again = 2 (no)
 ```
 
