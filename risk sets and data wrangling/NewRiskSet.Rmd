@@ -202,11 +202,77 @@ number_of_states <- evangelical2022 %>%
 evangelical2022 <- evangelical2022 %>% 
   full_join(population2022_2) ## why is this not all of the states (AL, AK, AZ, AR, CA, CO, CT excluded somehow), might be a problem with the merging (cries)
 
+
+weights <- evangelical2022 %>% 
+  group_by(state) %>% 
+  summarize(weight = mean(commonweight)) %>% 
+  filter(!is.na(state))
+
 attempted_collapse <- evangelical2022 %>% 
   group_by(state, pew_bornagain) %>% 
-  summarize(num = n(), weight = mean(commonweight)) %>% ##summarizing the weights (idk if this is right)
-  group_by(state) %>% ##group by state again
-  mutate(total = sum(num), evangelical_pop = (num/(total)*weight*100)) %>% ## get the percent evangelical (idk if this is right)
+  summarize(num = n()) %>% 
+  full_join(weights) %>% ##summarizing the weights (idk if this is right)
+  group_by(state) %>% ##group by state again (weight variable should be statewide not state-answer)
+  mutate(total = sum(num), evangelical_pop = ((num/(total)*weight)*100)) %>% ## get the percent evangelical (idk if this is right)
   filter(pew_bornagain == "1", !is.na(state)) ## getting rid of NAs and born again = 2 (no)
+
+## mean weight is correct, but it needs to be by state
+attempted_collapse
+
+#export(attempted_collapse, "evangelical2022.csv") 2022 only, for Scott
+#export(evangelical2022, "CES2022_clean.csv") cleaned data, only the vars we need
+```
+
+```{r}
+## evangelical 2021 data
+
+## load the r data file (why are they like this it's harvard come on)
+evangelical2021 <- as.data.frame(table)
+
+str(evangelical2021)
+
+evangelical2021 <- evangelical2021 %>% 
+  select(inputstate, pew_bornagain, commonweight) %>%
+  rename(state_num = 'inputstate') %>% 
+  mutate(state_num = as.character(state_num))
+
+## converting the state numbers to match population df
+evangelical2021$state_num[evangelical2021$state_num == "1"] <- "01"
+evangelical2021$state_num[evangelical2021$state_num == "2"] <- "02"
+evangelical2021$state_num[evangelical2021$state_num == "3"] <- "03"
+evangelical2021$state_num[evangelical2021$state_num == "4"] <- "04"
+evangelical2021$state_num[evangelical2021$state_num == "5"] <- "05"
+evangelical2021$state_num[evangelical2021$state_num == "6"] <- "06"
+evangelical2021$state_num[evangelical2021$state_num == "7"] <- "07"
+evangelical2021$state_num[evangelical2021$state_num == "8"] <- "08"
+evangelical2021$state_num[evangelical2021$state_num == "9"] <- "09"
+
+## get rid of attributes
+attributes(evangelical2021$pew_bornagain) <- NULL
+attributes(evangelical2021$commonweight) <- NULL
+
+## join with population to get all the state ID vars
+evangelical2021 <- evangelical2021 %>% 
+  full_join(population2022_2) %>% 
+  select(-c(population_total, year))
+
+weights2021 <- evangelical2021 %>% 
+  group_by(state) %>% 
+  summarize(weight = mean(commonweight)) %>% 
+  filter(!is.na(state))
+
+attempted_collapse2021 <- evangelical2021 %>% 
+  group_by(state, pew_bornagain) %>% 
+  summarize(num = n()) %>% 
+  full_join(weights) %>% ##summarizing the weights (idk if this is right)
+  group_by(state) %>% ##group by state again (weight variable should be statewide not state-answer)
+  mutate(total = sum(num), evangelical_pop = ((num/(total)*weight)*100)) %>% ## get the percent evangelical (idk if this is right)
+  filter(pew_bornagain == "1", !is.na(state))
+
+## join 2021 and 2022
+evangelical2122 <- attempted_collapse %>% 
+  full_join(attempted_collapse2021)
+
+## export(evangelical2122, "evangelical2021_2011.csv") export it 
 ```
 
