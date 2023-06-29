@@ -89,9 +89,11 @@ risk_set <- risk_set %>%
 ```{r}
 ## let's see if we can fill anything in now
 
+## population (from the )
+
 library(tidycensus)
 
-population2019 <- read_csv("nst-est2019-alldata.csv") ## population estimates 2010-2019
+population2019 <- read_csv("./datasets/nst-est2019-alldata.csv") ## population estimates 2010-2019
 
 population2019 <- population2019 %>% 
   filter(!row_number() %in% c(1:5)) ## get rid of rows I don't want at the top
@@ -175,31 +177,35 @@ population2022 <- population2019 %>%
 ```
 
 ```{r}
-## evangelical population
 
-evangelical2022 <- import("./datasets/CES22_Common.csv") ## evangelical data 2022
+## don't run this chunk
 
-evangelical2022 <- evangelical2022 %>% 
-  select(inputstate, pew_bornagain, commonweight) %>%
-  rename(state_num = 'inputstate') %>% 
-  mutate(state_num = as.character(state_num))
+## evangelical population (from the cooperative election survey)
 
-## converting the state numbers to match population df
-evangelical2022$state_num[evangelical2022$state_num == "1"] <- "01"
-evangelical2022$state_num[evangelical2022$state_num == "2"] <- "02"
-evangelical2022$state_num[evangelical2022$state_num == "3"] <- "03"
-evangelical2022$state_num[evangelical2022$state_num == "4"] <- "04"
-evangelical2022$state_num[evangelical2022$state_num == "5"] <- "05"
-evangelical2022$state_num[evangelical2022$state_num == "6"] <- "06"
-evangelical2022$state_num[evangelical2022$state_num == "7"] <- "07"
-evangelical2022$state_num[evangelical2022$state_num == "8"] <- "08"
-evangelical2022$state_num[evangelical2022$state_num == "9"] <- "09"
+evangelical2022_2 <- import("./datasets/CES2022_clean.csv") ## evangelical data 2022
 
-number_of_states <- evangelical2022 %>% 
+# evangelical2022 <- evangelical2022 %>% 
+#   select(inputstate, pew_bornagain, commonweight) %>%
+#   rename(state_num = 'inputstate') %>% 
+#   mutate(state_num = as.character(state_num))
+# 
+# ## converting the state numbers to match population df
+# evangelical2022$state_num[evangelical2022$state_num == "1"] <- "01"
+# evangelical2022$state_num[evangelical2022$state_num == "2"] <- "02"
+# evangelical2022$state_num[evangelical2022$state_num == "3"] <- "03"
+# evangelical2022$state_num[evangelical2022$state_num == "4"] <- "04"
+# evangelical2022$state_num[evangelical2022$state_num == "5"] <- "05"
+# evangelical2022$state_num[evangelical2022$state_num == "6"] <- "06"
+# evangelical2022$state_num[evangelical2022$state_num == "7"] <- "07"
+# evangelical2022$state_num[evangelical2022$state_num == "8"] <- "08"
+# evangelical2022$state_num[evangelical2022$state_num == "9"] <- "09"
+
+number_of_states <- evangelical2022_2 %>% 
   group_by(as.numeric(state_num)) %>% 
   summarize(n()) ## checking for stuff idk
 
-evangelical2022 <- evangelical2022 %>% 
+evangelical2022 <- evangelical2022_2 %>% 
+  mutate(state_num = as.character(state_num)) %>% 
   full_join(population2022_2) ## why is this not all of the states (AL, AK, AZ, AR, CA, CO, CT excluded somehow), might be a problem with the merging (cries)
 
 
@@ -214,7 +220,8 @@ attempted_collapse <- evangelical2022 %>%
   full_join(weights) %>% ##summarizing the weights (idk if this is right)
   group_by(state) %>% ##group by state again (weight variable should be statewide not state-answer)
   mutate(total = sum(num), evangelical_pop = ((num/(total)*weight)*100)) %>% ## get the percent evangelical (idk if this is right)
-  filter(pew_bornagain == "1", !is.na(state)) ## getting rid of NAs and born again = 2 (no)
+  filter(pew_bornagain == "1", !is.na(state)) %>%  ## getting rid of NAs and born again = 2 (no)
+  mutate(year = 2022)
 
 ## mean weight is correct, but it needs to be by state
 attempted_collapse
@@ -224,7 +231,7 @@ attempted_collapse
 ```
 
 ```{r}
-## evangelical 2021 data
+## evangelical 2021 data (from the cooperative election survey)
 
 ## load the r data file (why are they like this it's harvard come on)
 evangelical2021 <- as.data.frame(table)
@@ -267,12 +274,20 @@ attempted_collapse2021 <- evangelical2021 %>%
   full_join(weights) %>% ##summarizing the weights (idk if this is right)
   group_by(state) %>% ##group by state again (weight variable should be statewide not state-answer)
   mutate(total = sum(num), evangelical_pop = ((num/(total)*weight)*100)) %>% ## get the percent evangelical (idk if this is right)
-  filter(pew_bornagain == "1", !is.na(state))
+  filter(pew_bornagain == "1", !is.na(state)) %>% 
+  mutate(year = 2021)
 
 ## join 2021 and 2022
 evangelical2122 <- attempted_collapse %>% 
-  full_join(attempted_collapse2021)
+  full_join(attempted_collapse2021) %>% 
+  filter(state != "")
 
-## export(evangelical2122, "evangelical2021_2011.csv") export it 
+## export(evangelical2122, "evangelical2021_2011.csv") ## export it 
+```
+
+```{r}
+## incomepcap
+
+
 ```
 
