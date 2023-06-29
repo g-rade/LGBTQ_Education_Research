@@ -30,7 +30,8 @@ state_names$state_name[state_names$state_name == ""] <- NA ## sub out empties fo
 #remove_attributes(state_names, "format.stata")
 
 just_names <- state_names %>%
-  select(c(state, state_name)) ## get just the name variables
+  select(c(state, state_name)) %>% 
+  distinct() ## get just the name variables
 
 names2014 <- state_names %>% 
   select(state_name, state) %>% 
@@ -286,8 +287,95 @@ evangelical2122 <- attempted_collapse %>%
 ```
 
 ```{r}
-## incomepcap
+## incomepcap (from US Dept. of Commerce Bureau of Economic Analysis )
 
+incomepcap <- import("./datasets/income20112022.csv") ## import the dataset
 
+incomepcap <- incomepcap %>% 
+  rename(state_name = "GeoName") ## rename the name variable
+
+incomepcap <- incomepcap %>% 
+  filter(GeoFips != 0 & GeoFips != 11000) %>% ## drop the rows I don't want 
+  select(-GeoFips) ## drop the variable I don't want
+
+incomepcap <- incomepcap %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## match the state name when i merge
+  left_join(just_names) %>% ## bring in state variable
+  clean_names() ## clean names (why are they just numbers)
+
+income2011 <- incomepcap %>% 
+  select(state, state_name, x2011) %>% ## select the stuff for just the year i want
+  rename(incomepcap = 'x2011') %>% ## rename to match risk set
+  mutate(year = 2011) ## add year
+
+income2012 <- incomepcap %>% 
+  select(state, state_name, x2012) %>% 
+  rename(incomepcap = 'x2012') %>% 
+  mutate(year = 2012) ## repeating to 2012
+
+income2013 <- incomepcap %>% 
+  select(state, state_name, x2013) %>% 
+  rename(incomepcap = 'x2013') %>% 
+  mutate(year = 2013) ## repeating to 2013
+
+income2014 <- incomepcap %>% 
+  select(state, state_name, x2014) %>% 
+  rename(incomepcap = 'x2014') %>% 
+  mutate(year = 2014) ## repeating to 2014
+
+income2015 <- incomepcap %>% 
+  select(state, state_name, x2015) %>% 
+  rename(incomepcap = 'x2015') %>% 
+  mutate(year = 2015) ## repeating to 2015
+
+income2016 <- incomepcap %>% 
+  select(state, state_name, x2016) %>% 
+  rename(incomepcap = 'x2016') %>% 
+  mutate(year = 2016) ## repeating to 2016
+
+income2017 <- incomepcap %>% 
+  select(state, state_name, x2017) %>% 
+  rename(incomepcap = 'x2017') %>% 
+  mutate(year = 2017) ## repeating to 2017
+
+income2018 <- incomepcap %>% 
+  select(state, state_name, x2018) %>% 
+  rename(incomepcap = 'x2018') %>% 
+  mutate(year = 2018) ## repeating to 2018
+
+income2019 <- incomepcap %>% 
+  select(state, state_name, x2019) %>% 
+  rename(incomepcap = 'x2019') %>% 
+  mutate(year = 2019) ## repeating to 2019
+
+income2020 <- incomepcap %>% 
+  select(state, state_name, x2020) %>% 
+  rename(incomepcap = 'x2020') %>% 
+  mutate(year = 2020) ## repeating to 2020
+
+income2021 <- incomepcap %>% 
+  select(state, state_name, x2021) %>% 
+  rename(incomepcap = 'x2021') %>% 
+  mutate(year = 2021) ## repeating to 2021
+
+income2022 <- incomepcap %>% 
+  select(state, state_name, x2022) %>% 
+  rename(incomepcap = 'x2022') %>% 
+  mutate(year = 2022) ## repeating to 2022
+
+incomepcap11_22 <- income2011 %>% ## join them all
+  full_join(income2012) %>% 
+  full_join(income2013) %>% 
+  full_join(income2014) %>% 
+  full_join(income2015) %>% 
+  full_join(income2016) %>% 
+  full_join(income2017) %>% 
+  full_join(income2018) %>% 
+  full_join(income2019) %>% 
+  full_join(income2020) %>% 
+  full_join(income2021) %>% 
+  full_join(income2022)
+
+## export(incomepcap11_22, "incomepcap2011_2022.csv") ## export
 ```
 
