@@ -379,3 +379,16 @@ incomepcap11_22 <- income2011 %>% ## join them all
 ## export(incomepcap11_22, "incomepcap2011_2022.csv") ## export
 ```
 
+```{r}
+## get just he populations for each year and state
+
+risk_states <- import("./datasets/new_risk.csv") 
+population <- risk_states %>% 
+  select(year, statename, population_total)
+population <- population %>% 
+  mutate(statename = str_squish(toupper(statename))) %>% 
+  rename(state_name = "statename")
+
+## for some reason when i join this with population2022 it doesn't work past 2020 ughhhhhhhh i hate correlates of state policy 
+```
+
