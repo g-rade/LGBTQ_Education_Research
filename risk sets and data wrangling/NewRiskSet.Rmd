@@ -384,11 +384,23 @@ incomepcap11_22 <- income2011 %>% ## join them all
 
 risk_states <- import("./datasets/new_risk.csv") 
 population <- risk_states %>% 
-  select(year, statename, population_total)
+  select(year, statename, population_total) ## select cols I want
 population <- population %>% 
-  mutate(statename = str_squish(toupper(statename))) %>% 
-  rename(state_name = "statename")
+  mutate(statename = str_squish(toupper(statename))) %>% ## fix names
+  rename(state_name = "statename") %>% ## make variables match
+  distinct() ## get rid fo extras
 
-## for some reason when i join this with population2022 it doesn't work past 2020 ughhhhhhhh i hate correlates of state policy 
+population_all <- population2022 %>% 
+  select(state_name, year, population_total) %>% ## drop the state abbrev. var and state number
+  full_join(population) %>% ## join with the big risk set
+  filter(!is.na(population_total)) %>% ## get rid of the NA population/no state name
+  arrange(year) # sort by year
+
+pop_check <- population_all %>% 
+  group_by(year) %>% 
+  summarise(n()) ## check to see if there is 50 per year
+
+# export(population_all, "population_only2022.csv")
+
 ```
 
