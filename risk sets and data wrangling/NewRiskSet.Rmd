@@ -413,6 +413,62 @@ check_race <- import("./datasets/race_health_data.dta") ## load in the existing 
 
 check_race <- check_race %>% 
   select(state, statenam, pctblack, year) %>% 
-  filter(year >= 1987)
+  filter(year >= 1987, is.na(pctblack)) ## check for percent black coverage
+
+check_sex <- race_health %>% 
+  select(state, statenam, popfemale, year) %>% 
+  filter(year >= 1987, is.na(popfemale)) ## check for female population coverage
+
+
+## testing out the procedure 
+
+census_dems2 <- census_dems %>% ## starting with making a new df
+  select(`Label (Grouping)`, `SEX AND AGE!!Total population`) %>% ## select cols of interest (this is just a test)
+  rename(state_name = "Label (Grouping)", sex = "SEX AND AGE!!Total population") ## rename cause ew
+
+census_dems2 <- census_dems2 %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state name vairable to get rid of spaces and lowercase
+  filter(state_name != "PERCENT") %>% ## filter the percents
+  mutate(sex = ifelse(sex == "", NA, sex)) %>% ## get rid of empty cells
+  fill(sex, .direction = c("up")) %>% ## fill the empty (slay)
+  filter(state_name != "ESTIMATE") ## get rid of duplicate rows
+
+## white population 2021
+census_dems2021 <- census_dems %>% 
+  select(`Label (Grouping)`, `RACE!!Total population!!One race!!White`, `HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)`, `RACE!!Total population!!One race!!Black or African American`, `SEX AND AGE!!Total population!!Female`) %>% ## select vars
+  rename(state_name = "Label (Grouping)", white_pop = "RACE!!Total population!!One race!!White", black_pop = "RACE!!Total population!!One race!!Black or African American", hispanic_pop = "HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)", female_pop = "SEX AND AGE!!Total population!!Female") ## rename vars
+
+census_dems2021 <- census_dems2021 %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state name vairable to get rid of spaces and lowercase
+  filter(state_name != "PERCENT") %>% ## dump percent
+  mutate(white_pop = ifelse(white_pop == "", NA, white_pop), black_pop = ifelse(black_pop == "", NA, black_pop), hispanic_pop = ifelse(hispanic_pop == "", NA, hispanic_pop), female_pop = ifelse(female_pop == "", NA, female_pop)) %>% ## get rid of empty cells
+  fill(white_pop, black_pop, hispanic_pop, female_pop, .direction = "up") %>% ## fill!
+  filter(state_name != "ESTIMATE") ## ok so this works for multipe vars, maybe a loop is not needed IDK
+
+census_dems2021 <- census_dems2021 %>% 
+  filter(!state_name %in% c("DISTRICT OF COLUMBIA", "PUERTO RICO")) ## drop PR and DC (sorry)
+```
+
+```{r}
+## lets standardize the initiatives
+
+inits_exist <- state_data %>% 
+  select(state, state_name, init, initiatives, year) %>%  ## there are two intitiative variables so I'm just doing both
+  mutate(state_name = str_squish(toupper(state_name))) ## match them names bby
+
+inits_new <- import("./datasets/init_data.csv") ## import the new stuff
+
+inits_new <- inits_new %>% 
+  mutate(init = num_init, state_name = str_squish(toupper(state_name))) %>% ## fix them names bby and duplicate some columns
+  rename("initiatives" = num_init) ## rename so i have the duplicates
+
+inits <- inits_exist %>% 
+  full_join(inits_new) %>% ##full join
+  select(-c(state_fips, state_num, state_icpsr)) ## drop the columns that don't fill in from the crosswalk file
+
+inits <- inits %>% 
+  mutate(initiaitves = as.numeric(initiatives), mean = mean(initiatives, na.rm = T), sd = sd(initiatives, na.rm = T), std_init_use = (initiatives - mean)/sd) ## calculate the new columns: mean, sd, std_init_use (completely recalculated)
+
+#export(inits, "initiatives2023.csv") ## export
 ```
 
