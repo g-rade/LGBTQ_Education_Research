@@ -404,3 +404,15 @@ pop_check <- population_all %>%
 
 ```
 
+```{r}
+## demographic data
+
+census_dems <- import("./datasets/ACSDP1Y2021.DP05-2023-07-26T164727.csv") ## import the census bureau data 
+
+check_race <- import("./datasets/race_health_data.dta") ## load in the existing data to check for coverage
+
+check_race <- check_race %>% 
+  select(state, statenam, pctblack, year) %>% 
+  filter(year >= 1987)
+```
+
