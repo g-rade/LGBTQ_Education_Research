@@ -592,7 +592,9 @@ census_dems20152021 <- census_dems20152021 %>%
   mutate(female_pop = as.numeric(gsub(",", "", census_dems20152021$female_pop)), white_pop = as.numeric(gsub(",", "", census_dems20152021$white_pop)), black_pop = as.numeric(gsub(",", "", census_dems20152021$black_pop)), hispanic_pop = as.numeric(gsub(",", "", census_dems20152021$hispanic_pop))) %>% 
   mutate(pct_black = black_pop/population_total, pct_white = white_pop/population_total, pct_hispanic = hispanic_pop/population_total, pct_female = female_pop/population_total, pct_male = 1 - pct_female) ## boom we got it but no 2020 though, have to track that down separately
 
+
 ## export(census_dems20152021, "census_dems20152021.csv") ## export
+
 ```
 
 ```{r}
