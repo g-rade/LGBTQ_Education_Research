@@ -446,7 +446,151 @@ census_dems2021 <- census_dems2021 %>%
   filter(state_name != "ESTIMATE") ## ok so this works for multipe vars, maybe a loop is not needed IDK
 
 census_dems2021 <- census_dems2021 %>% 
-  filter(!state_name %in% c("DISTRICT OF COLUMBIA", "PUERTO RICO")) ## drop PR and DC (sorry)
+  filter(!state_name %in% c("DISTRICT OF COLUMBIA", "PUERTO RICO"))  %>% ## drop PR and DC (sorry)
+  mutate(year = 2021)
+```
+
+```{r}
+## lets work on a loop 
+
+census_names <- list.files("./datasets/census/", full.names = TRUE) ## a list of the names 
+
+## ok i'm not sure that this is working, will check back later but i'mjust going to do it manually becuase they keep 
+for (data in census_names){
+ data = import(data) 
+ data = data %>% 
+   select(`Label (Grouping)`, `RACE!!One race!!White`, `HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)`, `RACE!!One race!!Black or African American`, `SEX AND AGE!!Total population!!Female`) %>% ## select vars
+  rename(state_name = "Label (Grouping)", white_pop = "RACE!!One race!!White", black_pop = "RACE!!One race!!Black or African American", hispanic_pop = "HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)", female_pop = "SEX AND AGE!!Total population!!Female")
+ 
+ data = data %>% 
+   mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state name vairable to get rid of spaces and lowercase
+  filter(state_name != "PERCENT") %>% ## dump percent
+  mutate(white_pop = ifelse(white_pop == "", NA, white_pop), black_pop = ifelse(black_pop == "", NA, black_pop), hispanic_pop = ifelse(hispanic_pop == "", NA, hispanic_pop), female_pop = ifelse(female_pop == "", NA, female_pop)) %>% ## get rid of empty cells
+  fill(white_pop, black_pop, hispanic_pop, female_pop, .direction = "up") %>% ## fill!
+  filter(state_name != "ESTIMATE")
+ 
+ data = data %>% 
+   filter(!state_name %in% c("DISTRICT OF COLUMBIA", "PUERTO RICO")) ## drop PR and DC (sorry)
+}
+
+## i think the loop isn't working because the tables aren't the same year after year (fuck the census bureau for that)
+```
+
+```{r}
+## census data, sans loop
+
+## 2015
+census2015 <- import("./datasets/census/census2015.csv") ## import it
+
+census2015 <- census2015 %>% 
+  select(`Label (Grouping)`, `RACE!!One race!!White`, `HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)`, `RACE!!One race!!Black or African American`, `SEX AND AGE!!Total population!!Female`) %>% ## select vars
+  rename(state_name = "Label (Grouping)", white_pop = "RACE!!One race!!White", black_pop = "RACE!!One race!!Black or African American", hispanic_pop = "HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)", female_pop = "SEX AND AGE!!Total population!!Female")
+
+census2015 <- census2015 %>% 
+   mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state name vairable to get rid of spaces and lowercase
+  filter(state_name != "PERCENT") %>% ## dump percent
+  mutate(white_pop = ifelse(white_pop == "", NA, white_pop), black_pop = ifelse(black_pop == "", NA, black_pop), hispanic_pop = ifelse(hispanic_pop == "", NA, hispanic_pop), female_pop = ifelse(female_pop == "", NA, female_pop)) %>% ## get rid of empty cells
+  fill(white_pop, black_pop, hispanic_pop, female_pop, .direction = "up") %>% ## fill!
+  filter(state_name != "ESTIMATE")
+
+census2015 <- census2015 %>% 
+  filter(!state_name %in% c("DISTRICT OF COLUMBIA", "PUERTO RICO")) %>% ## filter out PR and DC
+  mutate(year = 2015) ## add the year 
+
+
+## 2016
+census2016 <- import("./datasets/census/census2016.csv")
+
+census2016 <- census2016 %>% 
+  select(`Label (Grouping)`, `RACE!!One race!!White`, `HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)`, `RACE!!One race!!Black or African American`, `SEX AND AGE!!Total population!!Female`) %>% ## select vars
+  rename(state_name = "Label (Grouping)", white_pop = "RACE!!One race!!White", black_pop = "RACE!!One race!!Black or African American", hispanic_pop = "HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)", female_pop = "SEX AND AGE!!Total population!!Female")
+
+census2016 <- census2016 %>% 
+   mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state name vairable to get rid of spaces and lowercase
+  filter(state_name != "PERCENT") %>% ## dump percent
+  mutate(white_pop = ifelse(white_pop == "", NA, white_pop), black_pop = ifelse(black_pop == "", NA, black_pop), hispanic_pop = ifelse(hispanic_pop == "", NA, hispanic_pop), female_pop = ifelse(female_pop == "", NA, female_pop)) %>% ## get rid of empty cells
+  fill(white_pop, black_pop, hispanic_pop, female_pop, .direction = "up") %>% ## fill!
+  filter(state_name != "ESTIMATE")
+
+census2016 <- census2016 %>% 
+  filter(!state_name %in% c("DISTRICT OF COLUMBIA", "PUERTO RICO")) %>% ## filter out PR and DC
+  mutate(year = 2016) 
+
+## 2017
+
+census2017 <- import("./datasets/census/census2017.csv")
+
+census2017 <- census2017 %>% 
+  select(`Label (Grouping)`, `RACE!!One race!!White`, `HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)`, `RACE!!One race!!Black or African American`, `SEX AND AGE!!Total population!!Female`) %>% ## select vars
+  rename(state_name = "Label (Grouping)", white_pop = "RACE!!One race!!White", black_pop = "RACE!!One race!!Black or African American", hispanic_pop = "HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)", female_pop = "SEX AND AGE!!Total population!!Female")
+
+census2017 <- census2017 %>% 
+   mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state name vairable to get rid of spaces and lowercase
+  filter(state_name != "PERCENT") %>% ## dump percent
+  mutate(white_pop = ifelse(white_pop == "", NA, white_pop), black_pop = ifelse(black_pop == "", NA, black_pop), hispanic_pop = ifelse(hispanic_pop == "", NA, hispanic_pop), female_pop = ifelse(female_pop == "", NA, female_pop)) %>% ## get rid of empty cells
+  fill(white_pop, black_pop, hispanic_pop, female_pop, .direction = "up") %>% ## fill!
+  filter(state_name != "ESTIMATE")
+
+census2017 <- census2017 %>% 
+  filter(!state_name %in% c("DISTRICT OF COLUMBIA", "PUERTO RICO")) %>% ## filter out PR and DC
+  mutate(year = 2017)
+
+## 2018
+
+census2018 <- import("./datasets/census/census2018.csv")
+
+census2018 <- census2018 %>% 
+  select(`Label (Grouping)`, `RACE!!Total population!!One race!!White`, `HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)`, `RACE!!Total population!!One race!!Black or African American`, `SEX AND AGE!!Total population!!Female`) %>% ## select vars
+  rename(state_name = "Label (Grouping)", white_pop = "RACE!!Total population!!One race!!White", black_pop = "RACE!!Total population!!One race!!Black or African American", hispanic_pop = "HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)", female_pop = "SEX AND AGE!!Total population!!Female")
+
+census2018 <- census2018 %>% 
+   mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state name vairable to get rid of spaces and lowercase
+  filter(state_name != "PERCENT") %>% ## dump percent
+  mutate(white_pop = ifelse(white_pop == "", NA, white_pop), black_pop = ifelse(black_pop == "", NA, black_pop), hispanic_pop = ifelse(hispanic_pop == "", NA, hispanic_pop), female_pop = ifelse(female_pop == "", NA, female_pop)) %>% ## get rid of empty cells
+  fill(white_pop, black_pop, hispanic_pop, female_pop, .direction = "up") %>% ## fill!
+  filter(state_name != "ESTIMATE")
+
+census2018 <- census2018 %>% 
+  filter(!state_name %in% c("DISTRICT OF COLUMBIA", "PUERTO RICO")) %>% ## filter out PR and DC
+  mutate(year = 2018)
+
+## 2019 
+
+census2019 <- import("./datasets/census/census2019.csv")
+
+census2019 <- census2019 %>% 
+  select(`Label (Grouping)`, `RACE!!Total population!!One race!!White`, `HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)`, `RACE!!Total population!!One race!!Black or African American`, `SEX AND AGE!!Total population!!Female`) %>% ## select vars
+  rename(state_name = "Label (Grouping)", white_pop = "RACE!!Total population!!One race!!White", black_pop = "RACE!!Total population!!One race!!Black or African American", hispanic_pop = "HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)", female_pop = "SEX AND AGE!!Total population!!Female")
+
+census2019 <- census2019 %>% 
+   mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state name vairable to get rid of spaces and lowercase
+  filter(state_name != "PERCENT") %>% ## dump percent
+  mutate(white_pop = ifelse(white_pop == "", NA, white_pop), black_pop = ifelse(black_pop == "", NA, black_pop), hispanic_pop = ifelse(hispanic_pop == "", NA, hispanic_pop), female_pop = ifelse(female_pop == "", NA, female_pop)) %>% ## get rid of empty cells
+  fill(white_pop, black_pop, hispanic_pop, female_pop, .direction = "up") %>% ## fill!
+  filter(state_name != "ESTIMATE")
+
+census2019 <- census2019 %>% 
+  filter(!state_name %in% c("DISTRICT OF COLUMBIA", "PUERTO RICO")) %>% ## filter out PR and DC
+  mutate(year = 2019)
+
+## now let's try to get some percentages with state population
+
+census_dems20152021 <- census2015 %>% 
+  full_join(census2016) %>% 
+  full_join(census2017) %>% 
+  full_join(census2018) %>% 
+  full_join(census2019) %>% 
+  full_join(census_dems2021) ## join them all together
+
+census_dems20152021  <- census_dems20152021 %>% 
+  left_join(population2022) ## join with population
+
+census_dems20152021 <- census_dems20152021 %>% 
+  select(-state_num) ## deselect the column that i don't need
+  
+census_dems20152021 <- census_dems20152021 %>% 
+  mutate(female_pop = as.numeric(gsub(",", "", census_dems20152021$female_pop)), white_pop = as.numeric(gsub(",", "", census_dems20152021$white_pop)), black_pop = as.numeric(gsub(",", "", census_dems20152021$black_pop)), hispanic_pop = as.numeric(gsub(",", "", census_dems20152021$hispanic_pop))) %>% 
+  mutate(pct_black = black_pop/population_total, pct_white = white_pop/population_total, pct_hispanic = hispanic_pop/population_total, pct_female = female_pop/population_total, pct_male = 1 - pct_female) ## boom we got it but no 2020 though, have to track that down separately
 ```
 
 ```{r}
