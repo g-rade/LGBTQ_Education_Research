@@ -619,6 +619,14 @@ census2010 <- census2010 %>%
   filter(!state_name %in% c("DISTRICT OF COLUMBIA", "PUERTO RICO")) %>% ## filter out PR and DC
   mutate(year = 2010)
 
+census2010 <- census2010 %>% 
+  mutate(white_pop = as.numeric(gsub(",", "", census2010$white_pop)), hispanic_pop = as.numeric(gsub(",", "", census2010$hispanic_pop)), female_pop = as.numeric(gsub(",", "", census2010$female_pop))) ## make everything numeric
+
+census2010 <- census2010 %>% 
+  left_join(population) %>% 
+  mutate(pct_white = white_pop/population_total, pct_hispanic = hispanic_pop/population_total, pct_female = female_pop/population_total) %>% 
+  select(-population_total)
+
 ## 2011 (i figured this one out by myself slayyyyyyy)
 
 census2011 <- import("./datasets/census/census2011.csv")
@@ -667,7 +675,69 @@ census2012 <- census2012 %>%
 
 census2012 <- census2012 %>% 
   mutate(year = 2012) ## add year
-  
+
+## 2013
+
+census2013 <- import("./datasets/census/census2013.csv")
+
+census2013 <- census2013[, !duplicated(colnames(census2013))] ## get rid of duplicate cols
+
+census2013 <- census2013 %>% 
+  select(`Label (Grouping)`, `SEX AND AGE!!Total population`, `RACE!!One race!!White`, `HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)`, `SEX AND AGE!!Total population!!Female`) %>% ## select vars
+  rename(state_name = "Label (Grouping)", white_pop = "RACE!!One race!!White",  hispanic_pop = "HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)", female_pop = "SEX AND AGE!!Total population!!Female", total_pop = "SEX AND AGE!!Total population")
+
+census2013 <- census2013 %>% 
+   mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state name vairable to get rid of spaces and lowercase
+  filter(!total_pop %in% c("c", "(X)"), !state_name %in% c("2012 - 2010 STATISTICAL SIGNIFICANCE", "2012 - 2011 STATISTICAL SIGNIFICANCE", "2012 - 2009 STATISTICAL SIGNIFICANCE", "2013 - 2009 STATISTICAL SIGNIFICANCE", "2012 ESTIMATE", "2011 ESTIMATE", "2010 ESTIMATE")) %>% ## dump percent
+  mutate(white_pop = ifelse(white_pop == "", NA, white_pop), hispanic_pop = ifelse(hispanic_pop == "", NA, hispanic_pop), female_pop = ifelse(female_pop == "", NA, female_pop), total_pop = ifelse(total_pop == "", NA, total_pop)) %>% ## get rid of empty cells
+  fill(total_pop, white_pop, hispanic_pop, female_pop, .direction = "up") %>% ## fill!
+  filter(!state_name %in% c("2011 ESTIMATE", "2010 ESTIMATE", "2013 ESTIMATE", "DISTRICT OF COLUMBIA", "PUERTO RICO"))
+
+census2013 <- census2013 %>% 
+  mutate(female_pop = as.numeric(gsub("%", "", census2013$female_pop)), white_pop = as.numeric(gsub("%", "", census2013$white_pop)), total_pop = as.numeric(gsub(",", "", census2013$total_pop)), hispanic_pop = as.numeric(gsub("%", "", census2013$hispanic_pop))) %>% ## make numeric and get rid of unwanted characters
+  mutate(pct_white = white_pop/100, pct_female = female_pop/100, pct_hispanic = hispanic_pop/100) %>% ## percentage vars
+  mutate(white_pop = total_pop*pct_white, female_pop = total_pop*pct_female, hispanic_pop = total_pop*pct_hispanic)
+
+census2013 <- census2013 %>% 
+  mutate(year = 2013) ## add year
+
+## 2014 
+
+census2014 <- import("./datasets/census/census2014.csv")
+
+census2014 <- census2014[, !duplicated(colnames(census2014))] ## get rid of duplicate cols
+
+census2014 <- census2014 %>% 
+  select(`Label (Grouping)`, `SEX AND AGE!!Total population`, `RACE!!One race!!White`, `HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)`, `SEX AND AGE!!Total population!!Female`) %>% ## select vars
+  rename(state_name = "Label (Grouping)", white_pop = "RACE!!One race!!White",  hispanic_pop = "HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)", female_pop = "SEX AND AGE!!Total population!!Female", total_pop = "SEX AND AGE!!Total population")
+
+census2014 <- census2014 %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state name vairable to get rid of spaces and lowercase
+  filter(!total_pop %in% c("c", "(X)"), !state_name %in% c("2014 - 2013 STATISTICAL SIGNIFICANCE", "2014 - 2012 STATISTICAL SIGNIFICANCE", "2014 - 2011 STATISTICAL SIGNIFICANCE", "2014 - 2010 STATISTICAL SIGNIFICANCE", "2012 ESTIMATE", "2011 ESTIMATE", "2010 ESTIMATE", "2013 ESTIMATE")) %>% ## dump percent
+  mutate(white_pop = ifelse(white_pop == "", NA, white_pop), hispanic_pop = ifelse(hispanic_pop == "", NA, hispanic_pop), female_pop = ifelse(female_pop == "", NA, female_pop), total_pop = ifelse(total_pop == "", NA, total_pop)) %>% ## get rid of empty cells
+  fill(total_pop, white_pop, hispanic_pop, female_pop, .direction = "up") %>% ## fill!
+  filter(!state_name %in% c("2014 ESTIMATE", "DISTRICT OF COLUMBIA", "PUERTO RICO"))
+
+census2014 <- census2014 %>% 
+  mutate(female_pop = as.numeric(gsub("%", "", census2014$female_pop)), white_pop = as.numeric(gsub("%", "", census2014$white_pop)), total_pop = as.numeric(gsub(",", "", census2014$total_pop)), hispanic_pop = as.numeric(gsub("%", "", census2014$hispanic_pop))) %>% ## make numeric and get rid of unwanted characters
+  mutate(pct_white = white_pop/100, pct_female = female_pop/100, pct_hispanic = hispanic_pop/100) %>% ## percentage vars
+  mutate(white_pop = total_pop*pct_white, female_pop = total_pop*pct_female, hispanic_pop = total_pop*pct_hispanic)
+
+census2014 <- census2014 %>% 
+  mutate(year = 2014)
+
+## merge it all together
+
+census1014 <- census2010 %>% 
+  full_join(census2011) %>% 
+  full_join(census2012) %>% 
+  full_join(census2013) %>% 
+  full_join(census2014) %>% 
+  full_join(crosswalk) %>% ## merge the crosswalk file
+  select(-total_pop) ## get rid of total population
+
+census1021 <- census1014 %>% 
+  full_join(census_dems20152021)
 ```
 
 ```{r}
