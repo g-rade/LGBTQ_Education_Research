@@ -737,7 +737,7 @@ census1014 <- census2010 %>%
   select(-total_pop) ## get rid of total population
 
 census1021 <- census1014 %>% 
-  full_join(census_dems20152021)
+  full_join(census_dems20152021) ## work in progress
 ```
 
 ```{r}
