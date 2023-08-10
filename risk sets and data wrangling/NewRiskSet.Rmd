@@ -775,22 +775,22 @@ pollib_raw <- pollib_raw %>%
   rename(state = "abb", pollib_median = "policy_updated") ## rename to match existing var name
 
 pollib_raw <- pollib_raw %>% 
-  filter(year >= 2015, state != "DC") ## filter out DC and years we already have
+  filter(year >= 1987, state != "DC") ## filter out DC and years we already have
 
 pollib_raw <- pollib_raw %>% 
   left_join(crosswalk) ## join with the crosswalk file for all the state ID vars
 
 pollib_raw <- pollib_raw %>% 
-  mutate(statenam = str_squish(toupper(statenam))) %>% ## make uppercase, get rid of extra spaces
-  rename(state_name = 'statenam') ## rename
+  mutate(state_name = str_squish(toupper(state_name))) ## make uppercase, get rid of extra spaces
 
-crosswalk <- crosswalk %>% 
-  mutate(statenam = str_squish(toupper(statenam))) %>% 
-  rename(state_name = 'statenam') ## fix the crosswalk file for state name case and var name
+
+#crosswalk <- crosswalk %>% 
+ # mutate(statenam = str_squish(toupper(statenam))) %>% 
+ # rename(state_name = 'statenam') ## fix the crosswalk file for state name case and var name
 
 ## export(crosswalk, "state_codes.csv") ## export the fixed crosswalk file as the same file name (overwrite slay)
 
-## export(pollib_raw, "pollib_median1520.csv") ## export pollib data
+## export(pollib_raw, "pollib_median8720.csv") ## export pollib data
 
 ```
 
