@@ -732,12 +732,16 @@ census1014 <- census2010 %>%
   full_join(census2011) %>% 
   full_join(census2012) %>% 
   full_join(census2013) %>% 
-  full_join(census2014) %>% 
-  full_join(crosswalk) %>% ## merge the crosswalk file
-  select(-total_pop) ## get rid of total population
+  full_join(census2014) %>%
+  full_join(crosswalk) %>% 
+  select(-c(total_pop, stateno, state_icpsr)) %>%  ## get rid of total population
+  mutate(pct_male = 1 - pct_female)
 
 census1021 <- census1014 %>% 
-  full_join(census_dems20152021) ## work in progress
+  full_join(census_dems20152021) %>% ## merge the crosswalk file
+  select(-population_total) ## get rid of population total
+
+## export(census1021, "census1021.csv") ## export for 2010-2021
 ```
 
 ```{r}
