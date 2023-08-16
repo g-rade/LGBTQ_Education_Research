@@ -743,12 +743,42 @@ census1021 <- census1014 %>%
 
 ## export(census1021, "census1021.csv") ## export for 2010-2021
 
-correlates <- import("./datasets/correlates_demographics.csv")
+correlates <- import("./datasets/correlates_demographics.csv") ## import the correlates of state policy data
 
 correlates2 <- correlates %>% 
-  left_join(population) ## join with the 
+  left_join(population) %>% ## join with the population data
+  mutate(female_pop = ifelse(is.na(female_pop), 0, female_pop), male_pop = ifelse(is.na(male_pop), 0, male_pop), pct_hispanic = ifelse(is.na(pct_hispanic), 0, pct_hispanic), pct_white = ifelse(is.na(pct_white), 0, pct_white)) ## replace NAs with 0s for the math
 
+correlates2 <- correlates2 %>% 
+  mutate(pct_white = pct_white/100, pct_hispanic = pct_hispanic/100) %>% ## convert to decimals
+  mutate(white_pop = pct_white*population_total, hispanic_pop = pct_hispanic*population_total, pct_female = female_pop/population_total, pct_male = male_pop/population_total)  ## get the pct and pop vars that are missing
 
+## replace 0s back with NAs
+correlates2$female_pop[correlates2$female_pop == 0] <- NA
+correlates2$pct_female[correlates2$pct_female == 0] <- NA
+correlates2$male_pop[correlates2$male_pop == 0] <- NA
+correlates2$pct_male[correlates2$pct_male == 0] <- NA
+correlates2$pct_white[correlates2$pct_white == 0] <- NA
+correlates2$white_pop[correlates2$white_pop == 0] <- NA
+correlates2$hispanic_pop[correlates2$hispanic_pop == 0] <- NA
+correlates2$pct_hispanic[correlates2$pct_hispanic == 0] <- NA
+
+correlates3 <- state_data %>% 
+  select(state_name, year, pctblack) %>% ## get the beginning few years of pct_black
+  rename(pct_black = "pctblack") %>% 
+  left_join(population) %>% ## population totals
+  left_join(crosswalk) %>% ## crosswalk file <3
+  filter(year >= 1987) ## filter years for risk set
+
+correlates3 <- correlates3 %>% 
+  mutate(black_pop = pct_black*population_total) ## get black population
+
+census_dems3 <- correlates2 %>% 
+  full_join(correlates3) %>%  ## join pct_black with filled in CSP data for demographics
+  full_join(census1021) %>%  ## join with the census demographics
+  select(-stateno) ## get rid of var i don't want
+
+## export(census_dems3, "population_demographics8720.csv") ## export
 ```
 
 ```{r}
