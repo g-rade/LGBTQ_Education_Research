@@ -742,6 +742,13 @@ census1021 <- census1014 %>%
   select(-population_total) ## get rid of population total
 
 ## export(census1021, "census1021.csv") ## export for 2010-2021
+
+correlates <- import("./datasets/correlates_demographics.csv")
+
+correlates2 <- correlates %>% 
+  left_join(population) ## join with the 
+
+
 ```
 
 ```{r}
