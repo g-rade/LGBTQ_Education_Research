@@ -835,3 +835,603 @@ pollib_raw <- pollib_raw %>%
 
 ```
 
+```{r}
+## education time
+
+## 2010
+education2010 <- import("./datasets/education/education2010.csv") ## import 
+
+education2010 <- education2010 %>% 
+  clean_names() ## clean names to make them unique
+
+education2010 <- education2010 %>% 
+  select(-c(poverty_rate_for_the_population_25_years_and_over_for_whom_poverty_status_is_determined_by_educational_attainment_level, poverty_rate_for_the_population_25_years_and_over_for_whom_poverty_status_is_determined_by_educational_attainment_level_less_than_high_school_graduate, poverty_rate_for_the_population_25_years_and_over_for_whom_poverty_status_is_determined_by_educational_attainment_level_high_school_graduate_includes_equivalency, poverty_rate_for_the_population_25_years_and_over_for_whom_poverty_status_is_determined_by_educational_attainment_level_bachelors_degree_or_higher, poverty_rate_for_the_population_25_years_and_over_for_whom_poverty_status_is_determined_by_educational_attainment_level_bachelors_degree_or_higher, median_earnings_in_the_past_12_months_in_2010_inflation_adjusted_dollars, median_earnings_in_the_past_12_months_in_2010_inflation_adjusted_dollars_population_25_years_and_over_with_earnings, median_earnings_in_the_past_12_months_in_2010_inflation_adjusted_dollars_less_than_high_school_graduate, median_earnings_in_the_past_12_months_in_2010_inflation_adjusted_dollars_high_school_graduate_includes_equivalency, median_earnings_in_the_past_12_months_in_2010_inflation_adjusted_dollars_some_college_or_associates_degree, median_earnings_in_the_past_12_months_in_2010_inflation_adjusted_dollars_bachelors_degree, median_earnings_in_the_past_12_months_in_2010_inflation_adjusted_dollars_graduate_or_professional_degree, percent_imputed, percent_imputed_educational_attainment, less_than_high_school_graduate, less_than_9th_grade, x9th_to_12th_grade_no_diploma, poverty_rate_for_the_population_25_years_and_over_for_whom_poverty_status_is_determined_by_educational_attainment_level_some_college_or_associates_degree)) ## get rid of the vars I don't want
+
+education2010 <- education2010 %>% 
+  rename(state_name = "label_grouping") ## rename
+
+education2010 <- education2010 %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the names
+  filter(state_name != "TOTAL") %>% ## get rid of total rows
+  mutate(population_18_to_24_years = ifelse(population_18_to_24_years == "", NA, population_18_to_24_years), 
+         high_school_graduate_includes_equivalency = ifelse(high_school_graduate_includes_equivalency == "", NA, high_school_graduate_includes_equivalency), 
+         some_college_or_associates_degree = ifelse(some_college_or_associates_degree == "", NA, some_college_or_associates_degree), 
+         bachelors_degree_or_higher = ifelse(bachelors_degree_or_higher == "", NA, bachelors_degree_or_higher),
+         population_25_years_and_over = ifelse(population_25_years_and_over == "", NA, population_25_years_and_over), 
+         high_school_graduate_includes_equivalency_2 = ifelse(high_school_graduate_includes_equivalency_2 == "", NA, high_school_graduate_includes_equivalency_2), 
+         some_college_no_degree = ifelse(some_college_no_degree == "", NA, some_college_no_degree), 
+         associates_degree = ifelse(associates_degree == "", NA, associates_degree), 
+         bachelors_degree = ifelse(bachelors_degree == "", NA, bachelors_degree), 
+         graduate_or_professional_degree = ifelse(graduate_or_professional_degree == "", NA, graduate_or_professional_degree), 
+         percent_high_school_graduate_or_higher = ifelse(percent_high_school_graduate_or_higher == "", NA, percent_high_school_graduate_or_higher), 
+         percent_bachelors_degree_or_higher = ifelse(percent_bachelors_degree_or_higher == "", NA, percent_bachelors_degree_or_higher), 
+         population_25_to_34_years = ifelse(population_25_to_34_years == "", NA, population_25_to_34_years), 
+         high_school_graduate_or_higher = ifelse(high_school_graduate_or_higher == "", NA, high_school_graduate_or_higher), 
+         bachelors_degree_or_higher_2 = ifelse(bachelors_degree_or_higher_2 == "", NA, bachelors_degree_or_higher_2), 
+         population_35_to_44_years = ifelse(population_35_to_44_years == "", NA, population_35_to_44_years), 
+         high_school_graduate_or_higher_2 = ifelse(high_school_graduate_or_higher_2 == "", NA, high_school_graduate_or_higher_2), 
+         bachelors_degree_or_higher_3 = ifelse(bachelors_degree_or_higher_3 == "", NA, bachelors_degree_or_higher_3), 
+         population_45_to_64_years = ifelse(population_45_to_64_years == "", NA, population_45_to_64_years),
+         high_school_graduate_or_higher_3 = ifelse(high_school_graduate_or_higher_3 == "", NA, high_school_graduate_or_higher_3), 
+         bachelors_degree_or_higher_4 = ifelse(bachelors_degree_or_higher_4 == "", NA, bachelors_degree_or_higher_4), 
+         population_65_years_and_over = ifelse(population_65_years_and_over == "", NA, population_65_years_and_over), 
+         high_school_graduate_or_higher_4 = ifelse(high_school_graduate_or_higher_4 == "", NA, high_school_graduate_or_higher_4), 
+         bachelors_degree_or_higher_5 = ifelse(bachelors_degree_or_higher_5 == "", NA, bachelors_degree_or_higher_5)) %>% ## replace empty quotes with NAs
+  fill(population_18_to_24_years, high_school_graduate_includes_equivalency, some_college_or_associates_degree, bachelors_degree_or_higher, population_25_years_and_over, high_school_graduate_includes_equivalency_2, some_college_no_degree, associates_degree, bachelors_degree, graduate_or_professional_degree, percent_high_school_graduate_or_higher, percent_bachelors_degree_or_higher, population_25_to_34_years, high_school_graduate_or_higher, bachelors_degree_or_higher_2, population_35_to_44_years, high_school_graduate_or_higher_2, bachelors_degree_or_higher_3, population_45_to_64_years, high_school_graduate_or_higher_3, bachelors_degree_or_higher_4, population_65_years_and_over, high_school_graduate_or_higher_4, bachelors_degree_or_higher_5, .direction = "up") ## fill everything up
+
+education2010 <- education2010 %>% 
+  filter(!state_name %in% c("ESTIMATE", "MALE", "FEMALE", "PUERTO RICO", "DISTRICT OF COLUMBIA")) ## filter unwanted rows
+
+education2010 <- education2010 %>% ## convert everything to numeric (ugh this is tedious)
+  mutate(population_18_to_24_years = as.numeric(gsub(",", "", education2010$population_18_to_24_years)),
+         population_25_years_and_over = as.numeric(gsub(",", "", education2010$population_25_years_and_over)), 
+         population_25_to_34_years = as.numeric(gsub(",", "", education2010$population_25_to_34_years)),
+         population_35_to_44_years = as.numeric(gsub(",", "", education2010$population_35_to_44_years)), 
+         population_45_to_64_years = as.numeric(gsub(",", "", education2010$population_45_to_64_years)), 
+         population_65_years_and_over = as.numeric(gsub(",", "", education2010$population_65_years_and_over)), 
+         high_school_graduate_includes_equivalency = as.numeric(gsub("%", "", education2010$high_school_graduate_includes_equivalency))/100, some_college_or_associates_degree = as.numeric(gsub("%", "", education2010$some_college_or_associates_degree))/100, 
+         bachelors_degree_or_higher = as.numeric(gsub("%", "", education2010$bachelors_degree_or_higher))/100, 
+         high_school_graduate_includes_equivalency_2 = as.numeric(gsub("%", "", education2010$high_school_graduate_includes_equivalency_2))/100, 
+         some_college_no_degree = as.numeric(gsub("%", "", education2010$some_college_no_degree))/100, 
+         associates_degree = as.numeric(gsub("%", "", education2010$associates_degree))/100, 
+         bachelors_degree = as.numeric(gsub("%", "", education2010$bachelors_degree))/100,
+         graduate_or_professional_degree = as.numeric(gsub("%", "", education2010$graduate_or_professional_degree))/100, 
+         percent_high_school_graduate_or_higher = as.numeric(gsub("%", "", education2010$percent_high_school_graduate_or_higher))/100, 
+         percent_bachelors_degree_or_higher = as.numeric(gsub("%", "", education2010$percent_bachelors_degree_or_higher))/100, 
+         high_school_graduate_or_higher = as.numeric(gsub("%", "", education2010$high_school_graduate_or_higher))/100,
+         bachelors_degree_or_higher_2 = as.numeric(gsub("%", "", education2010$bachelors_degree_or_higher_2))/100, 
+         high_school_graduate_or_higher_2 = as.numeric(gsub("%", "", education2010$high_school_graduate_or_higher_2))/100, 
+         bachelors_degree_or_higher_3 = as.numeric(gsub("%", "", education2010$bachelors_degree_or_higher_3))/100, 
+         high_school_graduate_or_higher_3 = as.numeric(gsub("%", "", education2010$high_school_graduate_or_higher_3))/100, 
+         bachelors_degree_or_higher_4 = as.numeric(gsub("%", "", education2010$bachelors_degree_or_higher_4))/100, 
+         high_school_graduate_or_higher_4 = as.numeric(gsub("%", "", education2010$high_school_graduate_or_higher_4))/100, 
+         bachelors_degree_or_higher_5 = as.numeric(gsub("%", "", education2010$bachelors_degree_or_higher_5))) ## converting everything to numeric (whew that was a lot)
+
+education2010 <- education2010 %>% 
+  mutate(high_school_graduate_includes_equivalency = high_school_graduate_includes_equivalency*population_18_to_24_years, percent_high_school_graduate_or_higher = percent_high_school_graduate_or_higher*population_25_years_and_over, bachelors_degree = bachelors_degree_or_higher*population_18_to_24_years, percent_bachelors_degree_or_higher = percent_bachelors_degree_or_higher*population_25_years_and_over) %>% ## get estimates for whole numbers
+  mutate(hs_educ = high_school_graduate_includes_equivalency + percent_high_school_graduate_or_higher, college_educ = bachelors_degree + percent_bachelors_degree_or_higher, year = 2010) ## add everything together; i have realized that i only need a few vars
+
+education2010 <- education2010 %>% 
+  left_join(population) ## join with population
+
+education2010 <- education2010 %>% 
+  mutate(hs_pct = (hs_educ/population_total)*100, college_pct = (college_educ/population_total)*100)
+
+education2010 <- education2010 %>% 
+  select(state_name, year, hs_educ, hs_pct, college_educ, college_pct)
+
+
+## 2011 
+
+education2011 <- import("./datasets/education/education2011.csv") ## import 2011
+
+education2011 <- education2011 %>% 
+  clean_names() %>% 
+  rename(state_name = "label_grouping") ## clean names and rename the ID var
+
+education2011 <- education2011 %>% 
+  select(state_name, population_18_to_24_years, high_school_graduate_includes_equivalency, bachelors_degree_or_higher, population_25_years_and_over, high_school_graduate_includes_equivalency_2, bachelors_degree) ## select the vars i want
+
+education2011 <- education2011 %>% 
+  mutate(population_18_to_24_years = ifelse(population_18_to_24_years == "", NA, population_18_to_24_years), high_school_graduate_includes_equivalency = ifelse(high_school_graduate_includes_equivalency == "", NA, high_school_graduate_includes_equivalency), bachelors_degree_or_higher = ifelse(bachelors_degree_or_higher == "", NA, bachelors_degree_or_higher), population_25_years_and_over = ifelse(population_25_years_and_over == "", NA, population_25_years_and_over), high_school_graduate_includes_equivalency_2 = ifelse(high_school_graduate_includes_equivalency_2 == "", NA, high_school_graduate_includes_equivalency_2), bachelors_degree = ifelse(bachelors_degree == "", NA, bachelors_degree)) ## replace the empty cells with NAs
+
+education2011 <- education2011 %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state_name var
+  filter(!state_name %in% c("TOTAL", "MALE", "FEMALE", "PUERTO RICO", "DISTRICT OF COLUMBIA")) ## filter out extra rows
+
+education2011 <- education2011 %>% 
+  fill(population_18_to_24_years, population_25_years_and_over, high_school_graduate_includes_equivalency, high_school_graduate_includes_equivalency_2, bachelors_degree_or_higher, bachelors_degree, .direction = "up") ## fill upwards
+
+education2011 <- education2011 %>% 
+  filter(state_name != "ESTIMATE") ## filter out rows I don't want
+
+education2011 <- education2011 %>% 
+  mutate(population_18_to_24_years = as.numeric(gsub(",", "", education2011$population_18_to_24_years)), 
+         population_25_years_and_over = as.numeric(gsub(",", "", education2011$population_25_years_and_over)), 
+         high_school_graduate_includes_equivalency = as.numeric(gsub("%", "", education2011$high_school_graduate_includes_equivalency))/100, 
+         high_school_graduate_includes_equivalency_2 = as.numeric(gsub("%", "", education2011$high_school_graduate_includes_equivalency_2))/100, 
+         bachelors_degree_or_higher = as.numeric(gsub("%", "", education2011$bachelors_degree_or_higher))/100, 
+  bachelors_degree = as.numeric(gsub("%", "", education2011$bachelors_degree))/100) ## make numeric 
+
+education2011 <- education2011 %>% 
+  mutate(hs_18 = population_18_to_24_years*high_school_graduate_includes_equivalency, college_18 = population_18_to_24_years*bachelors_degree_or_higher, hs_25 = population_25_years_and_over*high_school_graduate_includes_equivalency_2, college_25 = population_25_years_and_over*bachelors_degree, hs_educ = hs_18 + hs_25, college_educ = college_18 + college_25, year = 2011) ## get the total number of HS and College grads
+
+education2011 <- education2011 %>% 
+  left_join(population) ## join with population
+
+education2011 <- education2011 %>% 
+  mutate(hs_pct = (hs_educ/population_total)*100, college_pct = (college_educ/population_total)*100) %>% ## percentage varaibles
+  select(state_name, year, hs_educ, hs_pct, college_educ, college_pct) ## select only the one I want
+
+## 2012
+
+education2012 <- import("./datasets/education/education2012.csv") ## import
+
+education2012 <- education2012 %>% 
+  clean_names() %>% ## clean names
+  rename(state_name = "label_grouping") ## rename
+
+education2012 <- education2012 %>% 
+  select(state_name, population_18_to_24_years, high_school_graduate_includes_equivalency, bachelors_degree_or_higher, population_25_years_and_over, high_school_graduate_includes_equivalency_2, bachelors_degree) ## select
+
+education2012 <- education2012 %>% 
+  mutate(population_18_to_24_years = ifelse(population_18_to_24_years == "", NA, population_18_to_24_years), high_school_graduate_includes_equivalency = ifelse(high_school_graduate_includes_equivalency == "", NA, high_school_graduate_includes_equivalency), bachelors_degree_or_higher = ifelse(bachelors_degree_or_higher == "", NA, bachelors_degree_or_higher), population_25_years_and_over = ifelse(population_25_years_and_over == "", NA, population_25_years_and_over), high_school_graduate_includes_equivalency_2 = ifelse(high_school_graduate_includes_equivalency_2 == "", NA, high_school_graduate_includes_equivalency_2), bachelors_degree = ifelse(bachelors_degree == "", NA, bachelors_degree)) ## replace the empty cells with NAs
+
+education2012 <- education2012 %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state_name var
+  filter(!state_name %in% c("TOTAL", "MALE", "FEMALE", "PUERTO RICO", "DISTRICT OF COLUMBIA")) ## filter out extra rows
+
+education2012 <- education2012 %>% 
+  fill(population_18_to_24_years, population_25_years_and_over, high_school_graduate_includes_equivalency, high_school_graduate_includes_equivalency_2, bachelors_degree_or_higher, bachelors_degree, .direction = "up") ## fill upwards
+
+education2012 <- education2012 %>% 
+  filter(state_name != "ESTIMATE") ## filter out extra rows
+
+education2012 <- education2012 %>% 
+   mutate(population_18_to_24_years = as.numeric(gsub(",", "", education2012$population_18_to_24_years)), 
+         population_25_years_and_over = as.numeric(gsub(",", "", education2012$population_25_years_and_over)), 
+         high_school_graduate_includes_equivalency = as.numeric(gsub("%", "", education2012$high_school_graduate_includes_equivalency))/100, 
+         high_school_graduate_includes_equivalency_2 = as.numeric(gsub("%", "", education2012$high_school_graduate_includes_equivalency_2))/100, 
+         bachelors_degree_or_higher = as.numeric(gsub("%", "", education2012$bachelors_degree_or_higher))/100, 
+  bachelors_degree = as.numeric(gsub("%", "", education2012$bachelors_degree))/100) ## make numeric 
+
+education2012 <- education2012 %>% 
+  mutate(hs_18 = population_18_to_24_years*high_school_graduate_includes_equivalency, college_18 = population_18_to_24_years*bachelors_degree_or_higher, hs_25 = population_25_years_and_over*high_school_graduate_includes_equivalency_2, college_25 = population_25_years_and_over*bachelors_degree, hs_educ = hs_18 + hs_25, college_educ = college_18 + college_25, year = 2012) ## get the sums
+
+education2012 <- education2012 %>% 
+  left_join(population) ## join with population
+
+education2012 <- education2012 %>% 
+  mutate(hs_pct = (hs_educ/population_total)*100, college_pct = (college_educ/population_total)*100) %>% ## percentage varaibles
+  select(state_name, year, hs_educ, hs_pct, college_educ, college_pct) ## select only the one I want
+
+## 2013
+
+education2013 <- import("./datasets/education/education2013.csv")
+
+education2013 <- education2013 %>% 
+  clean_names() %>% ## clean names
+  rename(state_name = "label_grouping") ## rename
+
+education2013 <- education2013 %>% 
+  select(state_name, population_18_to_24_years, high_school_graduate_includes_equivalency, bachelors_degree_or_higher, population_25_years_and_over, population_25_years_and_over_high_school_graduate_includes_equivalency, population_25_years_and_over_bachelors_degree) ## select
+
+education2013 <- education2013 %>% 
+  mutate(population_18_to_24_years = ifelse(population_18_to_24_years == "", NA, population_18_to_24_years), high_school_graduate_includes_equivalency = ifelse(high_school_graduate_includes_equivalency == "", NA, high_school_graduate_includes_equivalency), bachelors_degree_or_higher = ifelse(bachelors_degree_or_higher == "", NA, bachelors_degree_or_higher), population_25_years_and_over = ifelse(population_25_years_and_over == "", NA, population_25_years_and_over), population_25_years_and_over_high_school_graduate_includes_equivalency = ifelse(population_25_years_and_over_high_school_graduate_includes_equivalency == "", NA, population_25_years_and_over_high_school_graduate_includes_equivalency), population_25_years_and_over_bachelors_degree = ifelse(population_25_years_and_over_bachelors_degree == "", NA, population_25_years_and_over_bachelors_degree)) ## replace the empty cells with NAs
+
+education2013 <- education2013 %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state_name var
+  filter(!state_name %in% c("TOTAL", "MALE", "FEMALE", "PUERTO RICO", "DISTRICT OF COLUMBIA")) ## get rid of extra rows
+
+education2013 <- education2013 %>% 
+  fill(state_name, population_18_to_24_years, high_school_graduate_includes_equivalency, bachelors_degree_or_higher, population_25_years_and_over, population_25_years_and_over_high_school_graduate_includes_equivalency, population_25_years_and_over_bachelors_degree, .direction = "up") ## fill upwards
+
+education2013 <- education2013 %>% 
+  filter(state_name != "ESTIMATE")
+
+education2013 <- education2013 %>% 
+  mutate(population_18_to_24_years = as.numeric(gsub(",", "", education2013$population_18_to_24_years)), 
+         population_25_years_and_over = as.numeric(gsub(",", "", education2013$population_25_years_and_over)), 
+         high_school_graduate_includes_equivalency = as.numeric(gsub("%", "", education2013$high_school_graduate_includes_equivalency))/100, 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = as.numeric(gsub("%", "", education2013$population_25_years_and_over_high_school_graduate_includes_equivalency))/100, 
+         bachelors_degree_or_higher = as.numeric(gsub("%", "", education2013$bachelors_degree_or_higher))/100, 
+  population_25_years_and_over_bachelors_degree = as.numeric(gsub("%", "", education2013$population_25_years_and_over_bachelors_degree))/100) ## make numeric 
+
+education2013 <- education2013 %>% 
+   mutate(hs_18 = population_18_to_24_years*high_school_graduate_includes_equivalency, college_18 = population_18_to_24_years*bachelors_degree_or_higher, hs_25 = population_25_years_and_over*population_25_years_and_over_high_school_graduate_includes_equivalency, college_25 = population_25_years_and_over*population_25_years_and_over_bachelors_degree, hs_educ = hs_18 + hs_25, college_educ = college_18 + college_25, year = 2013)
+
+education2013 <- education2013 %>% 
+  left_join(population)
+
+education2013 <- education2013 %>% 
+  mutate(hs_pct = (hs_educ/population_total)*100, college_pct = (college_educ/population_total)*100) %>% ## percentage varaibles
+  select(state_name, year, hs_educ, hs_pct, college_educ, college_pct) ## select only the one I want
+
+## 2014
+
+education2014 <- import("./datasets/education/education2014.csv")
+
+education2014 <- education2014 %>% 
+  clean_names() %>% ## clean names
+  rename(state_name = "label_grouping") ## rename
+
+education2014 <- education2014 %>% 
+  select(state_name, population_18_to_24_years, high_school_graduate_includes_equivalency, bachelors_degree_or_higher, population_25_years_and_over, population_25_years_and_over_high_school_graduate_includes_equivalency, population_25_years_and_over_bachelors_degree) ## select
+
+education2014 <- education2014 %>% 
+  mutate(population_18_to_24_years = ifelse(population_18_to_24_years == "", NA, population_18_to_24_years), high_school_graduate_includes_equivalency = ifelse(high_school_graduate_includes_equivalency == "", NA, high_school_graduate_includes_equivalency), bachelors_degree_or_higher = ifelse(bachelors_degree_or_higher == "", NA, bachelors_degree_or_higher), population_25_years_and_over = ifelse(population_25_years_and_over == "", NA, population_25_years_and_over), population_25_years_and_over_high_school_graduate_includes_equivalency = ifelse(population_25_years_and_over_high_school_graduate_includes_equivalency == "", NA, population_25_years_and_over_high_school_graduate_includes_equivalency), population_25_years_and_over_bachelors_degree = ifelse(population_25_years_and_over_bachelors_degree == "", NA, population_25_years_and_over_bachelors_degree)) ## replace the empty cells with NAs
+
+education2014 <- education2014 %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state_name var
+  filter(!state_name %in% c("TOTAL", "MALE", "FEMALE", "PUERTO RICO", "DISTRICT OF COLUMBIA")) ## get rid of extra rows
+
+education2014 <- education2014 %>% 
+  fill(state_name, population_18_to_24_years, high_school_graduate_includes_equivalency, bachelors_degree_or_higher, population_25_years_and_over, population_25_years_and_over_high_school_graduate_includes_equivalency, population_25_years_and_over_bachelors_degree, .direction = "up") ## fill upwards
+
+education2014 <- education2014 %>% 
+  filter(state_name != "ESTIMATE") ## dump rows
+
+education2014 <- education2014 %>% 
+  mutate(population_18_to_24_years = as.numeric(gsub(",", "", education2014$population_18_to_24_years)), 
+         population_25_years_and_over = as.numeric(gsub(",", "", education2014$population_25_years_and_over)), 
+         high_school_graduate_includes_equivalency = as.numeric(gsub("%", "", education2014$high_school_graduate_includes_equivalency))/100, 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = as.numeric(gsub("%", "", education2014$population_25_years_and_over_high_school_graduate_includes_equivalency))/100, 
+         bachelors_degree_or_higher = as.numeric(gsub("%", "", education2014$bachelors_degree_or_higher))/100, 
+  population_25_years_and_over_bachelors_degree = as.numeric(gsub("%", "", education2014$population_25_years_and_over_bachelors_degree))/100) ## make numeric 
+
+education2014 <- education2014 %>% 
+   mutate(hs_18 = population_18_to_24_years*high_school_graduate_includes_equivalency, college_18 = population_18_to_24_years*bachelors_degree_or_higher, hs_25 = population_25_years_and_over*population_25_years_and_over_high_school_graduate_includes_equivalency, college_25 = population_25_years_and_over*population_25_years_and_over_bachelors_degree, hs_educ = hs_18 + hs_25, college_educ = college_18 + college_25, year = 2014)
+
+education2014 <- education2014 %>% 
+  left_join(population)
+
+education2014 <- education2014 %>% 
+  mutate(hs_pct = (hs_educ/population_total)*100, college_pct = (college_educ/population_total)*100) %>% ## percentage varaibles
+  select(state_name, year, hs_educ, hs_pct, college_educ, college_pct) ## select only the one I want
+
+
+## 2015 
+
+education2015 <- import("./datasets/education/education2015.csv")
+
+education2015 <- education2015 %>% 
+  clean_names() %>% ## clean names
+  rename(state_name = "label_grouping") ## rename
+
+education2015 <- education2015 %>% 
+  select(state_name, population_18_to_24_years, population_18_to_24_years_high_school_graduate_includes_equivalency, population_18_to_24_years_bachelors_degree_or_higher, population_25_years_and_over, population_25_years_and_over_high_school_graduate_includes_equivalency, population_25_years_and_over_bachelors_degree) ## select
+
+education2015 <- education2015 %>% 
+  mutate(population_18_to_24_years = ifelse(population_18_to_24_years == "", NA, population_18_to_24_years), 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = ifelse(population_18_to_24_years_high_school_graduate_includes_equivalency == "", NA, population_18_to_24_years_high_school_graduate_includes_equivalency), 
+         population_18_to_24_years_bachelors_degree_or_higher = ifelse(population_18_to_24_years_bachelors_degree_or_higher == "", NA, population_18_to_24_years_bachelors_degree_or_higher),
+         population_25_years_and_over = ifelse(population_25_years_and_over == "", NA, population_25_years_and_over), 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = ifelse(population_25_years_and_over_high_school_graduate_includes_equivalency == "", NA, population_25_years_and_over_high_school_graduate_includes_equivalency), 
+         population_25_years_and_over_bachelors_degree = ifelse(population_25_years_and_over_bachelors_degree == "", NA, population_25_years_and_over_bachelors_degree)) ## replace the empty cells with NAs
+
+education2015 <- education2015 %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state_name var
+  filter(!state_name %in% c("TOTAL", "MALE", "FEMALE", "PUERTO RICO", "DISTRICT OF COLUMBIA", "MALES", "PERCENT")) ## get rid of extra rows
+
+education2015 <- education2015 %>% 
+  fill(state_name, population_18_to_24_years, population_18_to_24_years_high_school_graduate_includes_equivalency, population_18_to_24_years_bachelors_degree_or_higher, population_25_years_and_over, population_25_years_and_over_high_school_graduate_includes_equivalency, population_25_years_and_over_bachelors_degree, .direction = "up") ## fill upwards
+
+education2015 <- education2015 %>% 
+  filter(!state_name %in% c("ESTIMATE", "PERCENT MALES", "PERCENT FEMALES", "FEMALES"))## dump rows
+
+education2015 <- education2015 %>% 
+  mutate(population_18_to_24_years = as.numeric(gsub(",", "", education2015$population_18_to_24_years)), 
+         population_25_years_and_over = as.numeric(gsub(",", "", education2015$population_25_years_and_over)), 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = as.numeric(gsub(",", "", education2015$population_18_to_24_years_high_school_graduate_includes_equivalency))/100, 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = as.numeric(gsub(",", "", education2015$population_25_years_and_over_high_school_graduate_includes_equivalency))/100, 
+         population_18_to_24_years_bachelors_degree_or_higher = as.numeric(gsub(",", "", education2015$population_18_to_24_years_bachelors_degree_or_higher))/100, 
+  population_25_years_and_over_bachelors_degree = as.numeric(gsub(",", "", education2015$population_25_years_and_over_bachelors_degree))/100) ## make numeric 
+
+education2015 <- education2015 %>% 
+   rename(hs_18 = "population_18_to_24_years_high_school_graduate_includes_equivalency", college_18 = "population_18_to_24_years_bachelors_degree_or_higher", hs_25 = "population_25_years_and_over_high_school_graduate_includes_equivalency", college_25 = "population_25_years_and_over_bachelors_degree") %>% 
+  mutate(hs_educ = hs_18 + hs_25, college_educ = college_18 + college_25, year = 2015)
+
+education2015 <- education2015 %>% 
+  left_join(population2015) ## join with population total
+
+education2015 <- education2015 %>% 
+  mutate(hs_pct = (hs_educ/population_total)*100, college_pct = (college_educ/population_total)*100) %>% ## percentage varaibles
+  select(state_name, year, hs_educ, hs_pct, college_educ, college_pct) ## select only the one I want
+
+## 2016
+
+education2016 <- import("./datasets/education/education2016.csv")
+
+education2016 <- education2016 %>% 
+  clean_names() %>% ## clean names
+  rename(state_name = "label_grouping") ## rename
+
+education2016 <- education2016 %>% 
+  select(state_name, population_18_to_24_years, population_18_to_24_years_high_school_graduate_includes_equivalency, population_18_to_24_years_bachelors_degree_or_higher, population_25_years_and_over, population_25_years_and_over_high_school_graduate_includes_equivalency, population_25_years_and_over_bachelors_degree) ## select
+
+education2016 <- education2016 %>% 
+  mutate(population_18_to_24_years = ifelse(population_18_to_24_years == "", NA, population_18_to_24_years), 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = ifelse(population_18_to_24_years_high_school_graduate_includes_equivalency == "", NA, population_18_to_24_years_high_school_graduate_includes_equivalency), 
+         population_18_to_24_years_bachelors_degree_or_higher = ifelse(population_18_to_24_years_bachelors_degree_or_higher == "", NA, population_18_to_24_years_bachelors_degree_or_higher),
+         population_25_years_and_over = ifelse(population_25_years_and_over == "", NA, population_25_years_and_over), 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = ifelse(population_25_years_and_over_high_school_graduate_includes_equivalency == "", NA, population_25_years_and_over_high_school_graduate_includes_equivalency), 
+         population_25_years_and_over_bachelors_degree = ifelse(population_25_years_and_over_bachelors_degree == "", NA, population_25_years_and_over_bachelors_degree)) ## replace the empty cells with NAs
+
+education2016 <- education2016 %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state_name var
+  filter(!state_name %in% c("TOTAL", "MALE", "FEMALE", "PUERTO RICO", "DISTRICT OF COLUMBIA", "MALES", "PERCENT")) ## get rid of extra rows
+
+education2016 <- education2016 %>% 
+  fill(state_name, population_18_to_24_years, population_18_to_24_years_high_school_graduate_includes_equivalency, population_18_to_24_years_bachelors_degree_or_higher, population_25_years_and_over, population_25_years_and_over_high_school_graduate_includes_equivalency, population_25_years_and_over_bachelors_degree, .direction = "up") ## fill upwards
+
+education2016 <- education2016 %>% 
+  filter(!state_name %in% c("ESTIMATE", "PERCENT MALES", "PERCENT FEMALES", "FEMALES"))## dump rows
+
+education2016 <- education2016 %>% 
+  mutate(population_18_to_24_years = as.numeric(gsub(",", "", education2016$population_18_to_24_years)), 
+         population_25_years_and_over = as.numeric(gsub(",", "", education2016$population_25_years_and_over)), 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = as.numeric(gsub(",", "", education2016$population_18_to_24_years_high_school_graduate_includes_equivalency)), 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = as.numeric(gsub(",", "", education2016$population_25_years_and_over_high_school_graduate_includes_equivalency)), 
+         population_18_to_24_years_bachelors_degree_or_higher = as.numeric(gsub(",", "", education2016$population_18_to_24_years_bachelors_degree_or_higher)), 
+  population_25_years_and_over_bachelors_degree = as.numeric(gsub(",", "", education2016$population_25_years_and_over_bachelors_degree))) ## make numeric 
+
+education2016 <- education2016 %>% 
+   rename(hs_18 = "population_18_to_24_years_high_school_graduate_includes_equivalency", college_18 = "population_18_to_24_years_bachelors_degree_or_higher", hs_25 = "population_25_years_and_over_high_school_graduate_includes_equivalency", college_25 = "population_25_years_and_over_bachelors_degree") %>% 
+  mutate(hs_educ = hs_18 + hs_25, college_educ = college_18 + college_25, year = 2016)
+
+education2016 <- education2016 %>% 
+  left_join(population2016) ## join with population total
+
+education2016 <- education2016 %>% 
+  mutate(hs_pct = (hs_educ/population_total)*100, college_pct = (college_educ/population_total)*100) %>% ## percentage varaibles
+  select(state_name, year, hs_educ, hs_pct, college_educ, college_pct) ## select only the one I want
+
+## 2017 
+
+education2017 <- import("./datasets/education/education2017.csv")
+
+education2017 <- education2017 %>% 
+  clean_names() %>% ## clean names
+  rename(state_name = "label_grouping") ## rename
+
+education2017 <- education2017 %>% 
+  select(state_name, population_18_to_24_years, population_18_to_24_years_high_school_graduate_includes_equivalency, population_18_to_24_years_bachelors_degree_or_higher, population_25_years_and_over, population_25_years_and_over_high_school_graduate_includes_equivalency, population_25_years_and_over_bachelors_degree) ## select
+
+education2017 <- education2017 %>% 
+  mutate(population_18_to_24_years = ifelse(population_18_to_24_years == "", NA, population_18_to_24_years), 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = ifelse(population_18_to_24_years_high_school_graduate_includes_equivalency == "", NA, population_18_to_24_years_high_school_graduate_includes_equivalency), 
+         population_18_to_24_years_bachelors_degree_or_higher = ifelse(population_18_to_24_years_bachelors_degree_or_higher == "", NA, population_18_to_24_years_bachelors_degree_or_higher),
+         population_25_years_and_over = ifelse(population_25_years_and_over == "", NA, population_25_years_and_over), 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = ifelse(population_25_years_and_over_high_school_graduate_includes_equivalency == "", NA, population_25_years_and_over_high_school_graduate_includes_equivalency), 
+         population_25_years_and_over_bachelors_degree = ifelse(population_25_years_and_over_bachelors_degree == "", NA, population_25_years_and_over_bachelors_degree)) ## replace the empty cells with NAs
+
+education2017 <- education2017 %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state_name var
+  filter(!state_name %in% c("TOTAL", "MALE", "FEMALE", "PUERTO RICO", "DISTRICT OF COLUMBIA", "MALES", "PERCENT")) ## get rid of extra rows
+
+education2017 <- education2017 %>% 
+  fill(state_name, population_18_to_24_years, population_18_to_24_years_high_school_graduate_includes_equivalency, population_18_to_24_years_bachelors_degree_or_higher, population_25_years_and_over, population_25_years_and_over_high_school_graduate_includes_equivalency, population_25_years_and_over_bachelors_degree, .direction = "up") ## fill upwards
+
+education2017 <- education2017 %>% 
+  filter(!state_name %in% c("ESTIMATE", "PERCENT MALE", "PERCENT FEMALE", "FEMALES"))## dump rows
+
+education2017 <- education2017 %>% 
+  mutate(population_18_to_24_years = as.numeric(gsub(",", "", education2017$population_18_to_24_years)), 
+         population_25_years_and_over = as.numeric(gsub(",", "", education2017$population_25_years_and_over)), 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = as.numeric(gsub(",", "", education2017$population_18_to_24_years_high_school_graduate_includes_equivalency)), 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = as.numeric(gsub(",", "", education2017$population_25_years_and_over_high_school_graduate_includes_equivalency)), 
+         population_18_to_24_years_bachelors_degree_or_higher = as.numeric(gsub(",", "", education2017$population_18_to_24_years_bachelors_degree_or_higher)), 
+  population_25_years_and_over_bachelors_degree = as.numeric(gsub(",", "", education2017$population_25_years_and_over_bachelors_degree))) ## make numeric 
+
+education2017 <- education2017 %>% 
+   rename(hs_18 = "population_18_to_24_years_high_school_graduate_includes_equivalency", college_18 = "population_18_to_24_years_bachelors_degree_or_higher", hs_25 = "population_25_years_and_over_high_school_graduate_includes_equivalency", college_25 = "population_25_years_and_over_bachelors_degree") %>% 
+  mutate(hs_educ = hs_18 + hs_25, college_educ = college_18 + college_25, year = 2017)
+
+education2017 <- education2017 %>% 
+  left_join(population2017) ## join with population total
+
+education2017 <- education2017 %>% 
+  mutate(hs_pct = (hs_educ/population_total)*100, college_pct = (college_educ/population_total)*100) %>% ## percentage varaibles
+  select(state_name, year, hs_educ, hs_pct, college_educ, college_pct) ## select only the one I want
+
+## 2018
+education2018 <- import("./datasets/education/education2018.csv")
+
+education2018 <- education2018 %>% 
+  clean_names() %>% ## clean names
+  rename(state_name = "label_grouping") ## rename
+
+education2018 <- education2018 %>% 
+  select(state_name, 
+         age_by_educational_attainment_population_18_to_24_years, 
+         age_by_educational_attainment_population_18_to_24_years_high_school_graduate_includes_equivalency, 
+         age_by_educational_attainment_population_18_to_24_years_bachelors_degree_or_higher, 
+         age_by_educational_attainment_population_25_years_and_over, 
+         age_by_educational_attainment_population_25_years_and_over_high_school_graduate_includes_equivalency, 
+         age_by_educational_attainment_population_25_years_and_over_bachelors_degree) ## select
+
+education2018 <- education2018 %>% 
+  rename(population_18_to_24_years = "age_by_educational_attainment_population_18_to_24_years", 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = "age_by_educational_attainment_population_18_to_24_years_high_school_graduate_includes_equivalency", 
+         population_18_to_24_years_bachelors_degree_or_higher = "age_by_educational_attainment_population_18_to_24_years_bachelors_degree_or_higher", 
+         population_25_years_and_over = "age_by_educational_attainment_population_25_years_and_over", 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = "age_by_educational_attainment_population_25_years_and_over_high_school_graduate_includes_equivalency", 
+         population_25_years_and_over_bachelors_degree = "age_by_educational_attainment_population_25_years_and_over_bachelors_degree") ## rename (ugh)
+
+education2018 <- education2018 %>% 
+  mutate(population_18_to_24_years = ifelse(population_18_to_24_years == "", NA, population_18_to_24_years), 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = ifelse(population_18_to_24_years_high_school_graduate_includes_equivalency == "", NA, population_18_to_24_years_high_school_graduate_includes_equivalency), 
+         population_18_to_24_years_bachelors_degree_or_higher = ifelse(population_18_to_24_years_bachelors_degree_or_higher == "", NA, population_18_to_24_years_bachelors_degree_or_higher),
+         population_25_years_and_over = ifelse(population_25_years_and_over == "", NA, population_25_years_and_over), 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = ifelse(population_25_years_and_over_high_school_graduate_includes_equivalency == "", NA, population_25_years_and_over_high_school_graduate_includes_equivalency), 
+         population_25_years_and_over_bachelors_degree = ifelse(population_25_years_and_over_bachelors_degree == "", NA, population_25_years_and_over_bachelors_degree)) ## replace the empty cells with NAs
+
+education2018 <- education2018 %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state_name var
+  filter(!state_name %in% c("TOTAL", "MALE", "FEMALE", "PUERTO RICO", "DISTRICT OF COLUMBIA", "MALES", "PERCENT")) ## get rid of extra rows
+
+education2018 <- education2018 %>% 
+  fill(state_name, population_18_to_24_years, population_18_to_24_years_high_school_graduate_includes_equivalency, population_18_to_24_years_bachelors_degree_or_higher, population_25_years_and_over, population_25_years_and_over_high_school_graduate_includes_equivalency, population_25_years_and_over_bachelors_degree, .direction = "up") ## fill upwards
+
+education2018 <- education2018 %>% 
+  filter(!state_name %in% c("ESTIMATE", "PERCENT MALE", "PERCENT FEMALE", "FEMALES"))## dump rows
+
+education2018 <- education2018 %>% 
+  mutate(population_18_to_24_years = as.numeric(gsub(",", "", education2018$population_18_to_24_years)), 
+         population_25_years_and_over = as.numeric(gsub(",", "", education2018$population_25_years_and_over)), 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = as.numeric(gsub(",", "", education2018$population_18_to_24_years_high_school_graduate_includes_equivalency)), 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = as.numeric(gsub(",", "", education2018$population_25_years_and_over_high_school_graduate_includes_equivalency)), 
+         population_18_to_24_years_bachelors_degree_or_higher = as.numeric(gsub(",", "", education2018$population_18_to_24_years_bachelors_degree_or_higher)), 
+  population_25_years_and_over_bachelors_degree = as.numeric(gsub(",", "", education2018$population_25_years_and_over_bachelors_degree))) ## make numeric 
+
+education2018 <- education2018 %>% 
+   rename(hs_18 = "population_18_to_24_years_high_school_graduate_includes_equivalency", college_18 = "population_18_to_24_years_bachelors_degree_or_higher", hs_25 = "population_25_years_and_over_high_school_graduate_includes_equivalency", college_25 = "population_25_years_and_over_bachelors_degree") %>% 
+  mutate(hs_educ = hs_18 + hs_25, college_educ = college_18 + college_25, year = 2018)
+
+education2018 <- education2018 %>% 
+  left_join(population2018) ## join with population total
+
+education2018 <- education2018 %>% 
+  mutate(hs_pct = (hs_educ/population_total)*100, college_pct = (college_educ/population_total)*100) %>% ## percentage varaibles
+  select(state_name, year, hs_educ, hs_pct, college_educ, college_pct) ## select only the one I want
+
+## 2019
+
+education2019 <- import("./datasets/education/education2019.csv")
+
+education2019 <- education2019 %>% 
+  clean_names() %>% ## clean names
+  rename(state_name = "label_grouping") ## rename
+
+education2019 <- education2019 %>% 
+  select(state_name, 
+         age_by_educational_attainment_population_18_to_24_years, 
+         age_by_educational_attainment_population_18_to_24_years_high_school_graduate_includes_equivalency, 
+         age_by_educational_attainment_population_18_to_24_years_bachelors_degree_or_higher, 
+         age_by_educational_attainment_population_25_years_and_over, 
+         age_by_educational_attainment_population_25_years_and_over_high_school_graduate_includes_equivalency, 
+         age_by_educational_attainment_population_25_years_and_over_bachelors_degree) ## select
+
+education2019 <- education2019 %>% 
+  rename(population_18_to_24_years = "age_by_educational_attainment_population_18_to_24_years", 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = "age_by_educational_attainment_population_18_to_24_years_high_school_graduate_includes_equivalency", 
+         population_18_to_24_years_bachelors_degree_or_higher = "age_by_educational_attainment_population_18_to_24_years_bachelors_degree_or_higher", 
+         population_25_years_and_over = "age_by_educational_attainment_population_25_years_and_over", 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = "age_by_educational_attainment_population_25_years_and_over_high_school_graduate_includes_equivalency", 
+         population_25_years_and_over_bachelors_degree = "age_by_educational_attainment_population_25_years_and_over_bachelors_degree") ## rename (ugh)
+
+education2019 <- education2019 %>% 
+  mutate(population_18_to_24_years = ifelse(population_18_to_24_years == "", NA, population_18_to_24_years), 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = ifelse(population_18_to_24_years_high_school_graduate_includes_equivalency == "", NA, population_18_to_24_years_high_school_graduate_includes_equivalency), 
+         population_18_to_24_years_bachelors_degree_or_higher = ifelse(population_18_to_24_years_bachelors_degree_or_higher == "", NA, population_18_to_24_years_bachelors_degree_or_higher),
+         population_25_years_and_over = ifelse(population_25_years_and_over == "", NA, population_25_years_and_over), 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = ifelse(population_25_years_and_over_high_school_graduate_includes_equivalency == "", NA, population_25_years_and_over_high_school_graduate_includes_equivalency), 
+         population_25_years_and_over_bachelors_degree = ifelse(population_25_years_and_over_bachelors_degree == "", NA, population_25_years_and_over_bachelors_degree)) ## replace the empty cells with NAs
+
+education2019 <- education2019 %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state_name var
+  filter(!state_name %in% c("TOTAL", "MALE", "FEMALE", "PUERTO RICO", "DISTRICT OF COLUMBIA", "MALES", "PERCENT")) ## get rid of extra rows
+
+education2019 <- education2019 %>% 
+  fill(state_name, population_18_to_24_years, population_18_to_24_years_high_school_graduate_includes_equivalency, population_18_to_24_years_bachelors_degree_or_higher, population_25_years_and_over, population_25_years_and_over_high_school_graduate_includes_equivalency, population_25_years_and_over_bachelors_degree, .direction = "up") ## fill upwards
+
+education2019 <- education2019 %>% 
+  filter(!state_name %in% c("ESTIMATE", "PERCENT MALE", "PERCENT FEMALE", "FEMALES"))## dump rows
+
+education2019 <- education2019 %>% 
+  mutate(population_18_to_24_years = as.numeric(gsub(",", "", education2019$population_18_to_24_years)), 
+         population_25_years_and_over = as.numeric(gsub(",", "", education2019$population_25_years_and_over)), 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = as.numeric(gsub(",", "", education2019$population_18_to_24_years_high_school_graduate_includes_equivalency)), 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = as.numeric(gsub(",", "", education2019$population_25_years_and_over_high_school_graduate_includes_equivalency)), 
+         population_18_to_24_years_bachelors_degree_or_higher = as.numeric(gsub(",", "", education2019$population_18_to_24_years_bachelors_degree_or_higher)), 
+  population_25_years_and_over_bachelors_degree = as.numeric(gsub(",", "", education2019$population_25_years_and_over_bachelors_degree))) ## make numeric 
+
+education2019 <- education2019 %>% 
+   rename(hs_18 = "population_18_to_24_years_high_school_graduate_includes_equivalency", college_18 = "population_18_to_24_years_bachelors_degree_or_higher", hs_25 = "population_25_years_and_over_high_school_graduate_includes_equivalency", college_25 = "population_25_years_and_over_bachelors_degree") %>% 
+  mutate(hs_educ = hs_18 + hs_25, college_educ = college_18 + college_25, year = 2019)
+
+education2019 <- education2019 %>% 
+  left_join(population2019) ## join with population total
+
+education2019 <- education2019 %>% 
+  mutate(hs_pct = (hs_educ/population_total)*100, college_pct = (college_educ/population_total)*100) %>% ## percentage varaibles
+  select(state_name, year, hs_educ, hs_pct, college_educ, college_pct) ## select only the one I want
+
+## 2021
+
+education2021 <- import("./datasets/education/education2021.csv")
+
+education2021 <- education2021 %>% 
+  clean_names() %>% ## clean names
+  rename(state_name = "label_grouping") ## rename
+
+education2021 <- education2021 %>% 
+  select(state_name, 
+         age_by_educational_attainment_population_18_to_24_years, 
+         age_by_educational_attainment_population_18_to_24_years_high_school_graduate_includes_equivalency, 
+         age_by_educational_attainment_population_18_to_24_years_bachelors_degree_or_higher, 
+         age_by_educational_attainment_population_25_years_and_over, 
+         age_by_educational_attainment_population_25_years_and_over_high_school_graduate_includes_equivalency, 
+         age_by_educational_attainment_population_25_years_and_over_bachelors_degree) ## select
+
+education2021 <- education2021 %>% 
+  rename(population_18_to_24_years = "age_by_educational_attainment_population_18_to_24_years", 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = "age_by_educational_attainment_population_18_to_24_years_high_school_graduate_includes_equivalency", 
+         population_18_to_24_years_bachelors_degree_or_higher = "age_by_educational_attainment_population_18_to_24_years_bachelors_degree_or_higher", 
+         population_25_years_and_over = "age_by_educational_attainment_population_25_years_and_over", 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = "age_by_educational_attainment_population_25_years_and_over_high_school_graduate_includes_equivalency", 
+         population_25_years_and_over_bachelors_degree = "age_by_educational_attainment_population_25_years_and_over_bachelors_degree") ## rename (ugh)
+
+education2021 <- education2021 %>% 
+  mutate(population_18_to_24_years = ifelse(population_18_to_24_years == "", NA, population_18_to_24_years), 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = ifelse(population_18_to_24_years_high_school_graduate_includes_equivalency == "", NA, population_18_to_24_years_high_school_graduate_includes_equivalency), 
+         population_18_to_24_years_bachelors_degree_or_higher = ifelse(population_18_to_24_years_bachelors_degree_or_higher == "", NA, population_18_to_24_years_bachelors_degree_or_higher),
+         population_25_years_and_over = ifelse(population_25_years_and_over == "", NA, population_25_years_and_over), 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = ifelse(population_25_years_and_over_high_school_graduate_includes_equivalency == "", NA, population_25_years_and_over_high_school_graduate_includes_equivalency), 
+         population_25_years_and_over_bachelors_degree = ifelse(population_25_years_and_over_bachelors_degree == "", NA, population_25_years_and_over_bachelors_degree)) ## replace the empty cells with NAs
+
+education2021 <- education2021 %>% 
+  mutate(state_name = str_squish(toupper(state_name))) %>% ## fix the state_name var
+  filter(!state_name %in% c("TOTAL", "MALE", "FEMALE", "PUERTO RICO", "DISTRICT OF COLUMBIA", "MALES", "PERCENT")) ## get rid of extra rows
+
+education2021 <- education2021 %>% 
+  fill(state_name, population_18_to_24_years, population_18_to_24_years_high_school_graduate_includes_equivalency, population_18_to_24_years_bachelors_degree_or_higher, population_25_years_and_over, population_25_years_and_over_high_school_graduate_includes_equivalency, population_25_years_and_over_bachelors_degree, .direction = "up") ## fill upwards
+
+education2021 <- education2021 %>% 
+  filter(!state_name %in% c("ESTIMATE", "PERCENT MALE", "PERCENT FEMALE", "FEMALES"))## dump rows
+
+education2021 <- education2021 %>% 
+  mutate(population_18_to_24_years = as.numeric(gsub(",", "", education2021$population_18_to_24_years)), 
+         population_25_years_and_over = as.numeric(gsub(",", "", education2021$population_25_years_and_over)), 
+         population_18_to_24_years_high_school_graduate_includes_equivalency = as.numeric(gsub(",", "", education2021$population_18_to_24_years_high_school_graduate_includes_equivalency)), 
+         population_25_years_and_over_high_school_graduate_includes_equivalency = as.numeric(gsub(",", "", education2021$population_25_years_and_over_high_school_graduate_includes_equivalency)), 
+         population_18_to_24_years_bachelors_degree_or_higher = as.numeric(gsub(",", "", education2021$population_18_to_24_years_bachelors_degree_or_higher)), 
+  population_25_years_and_over_bachelors_degree = as.numeric(gsub(",", "", education2021$population_25_years_and_over_bachelors_degree))) ## make numeric 
+
+education2021 <- education2021 %>% 
+   rename(hs_18 = "population_18_to_24_years_high_school_graduate_includes_equivalency", college_18 = "population_18_to_24_years_bachelors_degree_or_higher", hs_25 = "population_25_years_and_over_high_school_graduate_includes_equivalency", college_25 = "population_25_years_and_over_bachelors_degree") %>% 
+  mutate(hs_educ = hs_18 + hs_25, college_educ = college_18 + college_25, year = 2021)
+
+education2021 <- education2021 %>% 
+  left_join(population2021) ## join with population total
+
+education2021 <- education2021 %>% 
+  mutate(hs_pct = (hs_educ/population_total)*100, college_pct = (college_educ/population_total)*100) %>% ## percentage varaibles
+  select(state_name, year, hs_educ, hs_pct, college_educ, college_pct) ## select only the one I want
+
+
+education1021 <- education2010 %>% 
+  full_join(education2011) %>% 
+  full_join(education2012) %>% 
+  full_join(education2013) %>% 
+  full_join(education2014) %>% 
+  full_join(education2015) %>% 
+  full_join(education2016) %>% 
+  full_join(education2017) %>% 
+  full_join(education2018) %>% 
+  full_join(education2019) %>% 
+  full_join(education2012) ## join everything together
+
+##export(education1021, "education1021.csv") ## export
+```
+
