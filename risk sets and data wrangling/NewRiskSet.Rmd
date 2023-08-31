@@ -1435,3 +1435,43 @@ education1021 <- education2010 %>%
 ##export(education1021, "education1021.csv") ## export
 ```
 
+```{r}
+## let's join it all together
+
+education <- import("./datasets/education1021.csv") ## educational attainmnet
+population_dems <- import("./datasets/population_demographics8720.csv") ## population demographics
+pollib <- import("./datasets/pollib_median8720.csv") ## policy liberalism
+initiatives <- import("./datasets/initiatives2023.csv") ## initiatives
+evangelical <- import("./datasets/evangelical2021_2011.csv") ## evangelical population
+income <- import("./datasets/incomepcap2011_2022.csv") ## income per capita
+population <- population_all ## population
+unified <- import("./datasets/unified_data.csv") ## state unity
+crosswalk <- import("./datasets/state_codes.csv") ## crosswalk file
+bowen <- import("./datasets/bowen8720.csv") ## bowen standardsa
+
+evangelical <- evangelical %>% 
+  select(-c(pew_bornagain, weight, total, num)) ## drop some unnecessary vars
+
+covars <- crosswalk %>% 
+  full_join(population_all) %>% 
+  full_join(population_dems) %>% 
+  full_join(evangelical) %>% 
+  full_join(pollib) %>% 
+  full_join(income) %>% 
+  full_join(initiatives) %>% 
+  full_join(unified) %>% 
+  full_join(bowen) %>% 
+  full_join(education) ## join everything together
+
+covars <- covars %>% 
+  filter(year >= 1987, !is.na(state_no)) ## drop years
+
+covars <- covars %>% 
+  left_join(risk_set) ## join wiht existing risk set
+
+covars <- covars %>% 
+  select(-c(direction, category, statename, policy, adoption_year)) ## drop some vars
+
+## this isn't quite right but I gotta spend some time on it
+```
+
