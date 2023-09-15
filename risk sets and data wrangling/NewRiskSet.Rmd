@@ -825,9 +825,10 @@ pollib_raw <- pollib_raw %>%
   mutate(state_name = str_squish(toupper(state_name))) ## make uppercase, get rid of extra spaces
 
 
-#crosswalk <- crosswalk %>% 
- # mutate(statenam = str_squish(toupper(statenam))) %>% 
- # rename(state_name = 'statenam') ## fix the crosswalk file for state name case and var name
+# crosswalk <- crosswalk %>% 
+#   mutate(statenam = str_squish(toupper(statenam))) %>% 
+#   rename(state_name = 'statenam')  %>% ## fix the crosswalk file for state name case and var name
+#   filter(!is.na(stateno))
 
 ## export(crosswalk, "state_codes.csv") ## export the fixed crosswalk file as the same file name (overwrite slay)
 
@@ -1432,6 +1433,9 @@ education1021 <- education2010 %>%
   full_join(education2019) %>% 
   full_join(education2012) ## join everything together
 
+ecuation1021 <- education1021 %>% 
+  mutate(hs_pct = hs_pct/100, college_pct = college_pct/100) ## convert to decimals
+
 ##export(education1021, "education1021.csv") ## export
 ```
 
@@ -1452,8 +1456,16 @@ bowen <- import("./datasets/bowen8720.csv") ## bowen standardsa
 evangelical <- evangelical %>% 
   select(-c(pew_bornagain, weight, total, num)) ## drop some unnecessary vars
 
-covars <- crosswalk %>% 
-  full_join(population_all) %>% 
+unified <- unified %>% 
+  mutate(state_name = str_squish(toupper(state_name))) ## fix state name case
+
+bowen <- bowen %>% 
+  mutate(state_name = str_squish(toupper(state_name))) ## fix state name case
+
+population_dems <- population_dems %>% 
+  select(-state_no)
+
+covars <- population_all %>%  
   full_join(population_dems) %>% 
   full_join(evangelical) %>% 
   full_join(pollib) %>% 
@@ -1461,17 +1473,114 @@ covars <- crosswalk %>%
   full_join(initiatives) %>% 
   full_join(unified) %>% 
   full_join(bowen) %>% 
-  full_join(education) ## join everything together
+  full_join(education) %>% 
+  left_join(crosswalk)## join everything together
 
 covars <- covars %>% 
-  filter(year >= 1987, !is.na(state_no)) ## drop years
+  filter(year >= 1987) ## drop years
 
-covars <- covars %>% 
-  left_join(risk_set) ## join wiht existing risk set
 
-covars <- covars %>% 
-  select(-c(direction, category, statename, policy, adoption_year)) ## drop some vars
+#covars <- covars %>% 
+  #left_join(risk_set) ## join wiht existing risk set
+
+# covars <- covars %>% 
+  #select(-c(direction, category, statename, policy, adoption_year)) ## drop some vars
 
 ## this isn't quite right but I gotta spend some time on it
+```
+
+```{r}
+## check new coverage
+
+check_pop <- covars %>% 
+  select(state_name, state, year, population_total) %>% 
+  group_by(state_name) %>% 
+  summarize(min(year), max(year))
+
+check_female <- covars %>% 
+  select(state_name, state, year, female_pop) %>% 
+  group_by(state_name) %>% 
+  summarize(min(year), max(year))
+
+check_init <- covars %>% 
+  select(state_name, state, year, std_init_use) %>% 
+  group_by(state_name) %>% 
+  summarize(min(year), max(year))
+
+check_unified <- covars %>% 
+  select(state_name, state, year, party_control) %>% 
+  group_by(state_name) %>% 
+  summarize(min(year), max(year))
+```
+
+```{r}
+## working out the problem with why there are too many rows in my dataset
+
+## ok, let's join together all the evangelical data
+evangelical <- evangelical %>% 
+  mutate(year = as.numeric(year)) ## get the year var to be the exact same
+
+evangelical <- evangelical %>% 
+  left_join(crosswalk) ## join with crosswalk file
+
+evangelical1 <- evangelical1 %>% 
+  left_join(crosswalk) ## join the crosswalk file, getting all of the ID vars
+
+evangelical2 <- evangelical %>% 
+  full_join(evangelical1) ## join together, for 1800 rows
+
+income1 <- state_data %>% 
+  full_join(expanded_years) %>% 
+  full_join(race_health) %>% 
+  full_join(crosswalk) ## get all the earlier rows of the income vars together
+
+income1 <- income1 %>% 
+  select(state_name, state, statefip, state_icpsr, stateno, year, incomepcap) ## select only the ID vars and incomepcap
+
+income1 <- income1 %>% 
+  filter(year >= 1987) ## dump extra years
+
+income1 <- income1 %>% 
+  filter(!is.na(statefip)) %>% 
+  filter(!is.na(incomepcap)) ## get rid of  the extra rows
+
+income1 <- income1 %>% 
+  distinct() ## get rid of extra rows
+
+income1 <- income1 %>% 
+  full_join(income) ## join with the new data, 1800 rows
+
+## population dems
+
+existing <- state_data %>% 
+  full_join(expanded_years) %>% 
+  full_join(race_health) %>% 
+  full_join(crosswalk)
+
+pop_dems1 <- existing %>% 
+  select(state_name, state, statefip, state_icpsr, stateno, year, pct_black, pctblack)
+
+pop_dems1 <- pop_dems1 %>% 
+  filter(!is.na(statefip))
+
+pop_dems1 <- pop_dems1 %>% 
+  filter(!is.na(pct_black))
+
+pop_dems1 <- pop_dems1 %>% 
+  filter(year >= 1987)
+
+population_dems <- population_dems %>% 
+  filter(!state %in% c("GU", "VI", "DC", "PR"))
+
+population_dems <- population_dems %>% 
+  distinct(state_name, state, year, .keep_all = TRUE)
+
+population_dems <- population_dems %>% 
+  full_join(pop_dems1) %>% 
+  distinct(state_name, state, year, .keep_all = TRUE) ## i think this is the best i can do for this one
+
+
+
+
 ```
 
