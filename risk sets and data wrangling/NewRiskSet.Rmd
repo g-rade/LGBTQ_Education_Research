@@ -1474,7 +1474,7 @@ covars <- population_all %>%
   full_join(unified) %>% 
   full_join(bowen) %>% 
   full_join(education) %>% 
-  left_join(crosswalk)## join everything together
+  left_join(crosswalk)## join everything together (not working )
 
 covars <- covars %>% 
   filter(year >= 1987) ## drop years
@@ -1495,7 +1495,7 @@ covars <- covars %>%
 check_pop <- covars %>% 
   select(state_name, state, year, population_total) %>% 
   group_by(state_name) %>% 
-  summarize(min(year), max(year))
+  summarize(min(year), max(year), n())
 
 check_female <- covars %>% 
   select(state_name, state, year, female_pop) %>% 
@@ -1529,6 +1529,12 @@ evangelical1 <- evangelical1 %>%
 evangelical2 <- evangelical %>% 
   full_join(evangelical1) ## join together, for 1800 rows
 
+evangelical2 <- evangelical2 %>% 
+  select(-c(stateno))
+
+evangelical2 <- evangelical2 %>% 
+  mutate(state_icpsr = as.numeric(state_icpsr))
+
 income1 <- state_data %>% 
   full_join(expanded_years) %>% 
   full_join(race_health) %>% 
@@ -1555,32 +1561,103 @@ income1 <- income1 %>%
 existing <- state_data %>% 
   full_join(expanded_years) %>% 
   full_join(race_health) %>% 
-  full_join(crosswalk)
+  full_join(crosswalk) ## existing covars dataset (the old stuff)
 
 pop_dems1 <- existing %>% 
-  select(state_name, state, statefip, state_icpsr, stateno, year, pct_black, pctblack)
+  select(state_name, state, statefip, state_icpsr, stateno, year, pct_black, pctblack) ## select the existing popuulation vars
 
 pop_dems1 <- pop_dems1 %>% 
-  filter(!is.na(statefip))
+  filter(!is.na(statefip)) # get rid of NAs
 
 pop_dems1 <- pop_dems1 %>% 
-  filter(!is.na(pct_black))
+  filter(!is.na(pct_black)) ## get rid of NAs
 
 pop_dems1 <- pop_dems1 %>% 
-  filter(year >= 1987)
+  filter(year >= 1987) ## get rid of early years I don't want
 
 population_dems <- population_dems %>% 
-  filter(!state %in% c("GU", "VI", "DC", "PR"))
+  filter(!state %in% c("GU", "VI", "DC", "PR")) ## get rid of extra states
 
 population_dems <- population_dems %>% 
-  distinct(state_name, state, year, .keep_all = TRUE)
+  distinct(state_name, state, year, .keep_all = TRUE) ## make distince
 
 population_dems <- population_dems %>% 
   full_join(pop_dems1) %>% 
   distinct(state_name, state, year, .keep_all = TRUE) ## i think this is the best i can do for this one
 
+population_dems <- population_dems %>% 
+  select(-population_total) ## drop extra population var
 
+## initiatives
 
+initiatives <- initiatives %>% 
+  filter(year >= 1987) %>% 
+  distinct(state_name, state, year, .keep_all = TRUE) ## distinct and filter years to get 1800 rows
 
+## unified
+
+unified1 <- existing %>% 
+  select(state_name, state, year, statefip, state_icpsr, unified) ## get the existing risk set data but only the vars I need
+
+unified1 <- unified1 %>% 
+  filter(year >= 1987 & year < 2015) %>% ## filter the years I don't want in this df
+  distinct(state_name, state, year, .keep_all = T) ## rid this object of duplicate rows
+ 
+unified <- unified %>% 
+  full_join(unified1) ## she complete
+
+## population
+
+population_all <- population_all %>% 
+  left_join(crosswalk) ## join wiht crosswalk file
+
+population_all <- population_all %>% 
+  select(-stateno) ## drop state number (cause ew)
+
+population_all <- population_all %>% 
+  filter(!state %in% c("DC", "GU", "PR", "VI")) ## drop extra non-states
+  
+
+pop_check2 <- population_all %>% 
+  group_by(state_name) %>% 
+  summarize(n(), min(year), max(year)) ## readyyy
+```
+
+```{r}
+## let's do the final join
+
+covariates <- population_all %>% 
+  full_join(population_dems) %>%  ## 1850 obervations (good)
+  select(-statefip)
+
+covariates <- covariates %>% 
+  left_join(income1) ## join with income 1850 observations (correct) (left join to drop the fips var)
+
+covariates <- covariates %>% 
+  full_join(education) ## join with education, 1850 observations (correct)
+
+covariates <- covariates %>% 
+  left_join(pollib) ## ## join with income 1850 observations (correct) (left join to drop the fips var)
+
+covariates <- covariates %>% 
+  left_join(bowen) ## join with bowen standards
+
+covariates <- covariates %>% 
+  left_join(unified) ## join with unified, 1850 observations
+
+covariates <- covariates %>% 
+  left_join(initiatives) %>% 
+  select(-c(mean, sd)) ## join with initiatives, 1850 observations (stay winning)
+
+covariates <- covariates %>% 
+  left_join(evangelical2) ## join with evangelical, 1850 observations (slaying)
+
+covariates <- covariates %>% 
+  left_join(crosswalk) ## join the crosswalk dataset to fill in the missing values of the fips codes and stuff 
+
+covariates <- covariates %>% 
+  select(-c(stateno, statefip, state_num)) ## get rid of redundant columns that i shall not need 
+  
+## export(covariates, "covariates.csv") ## export this
 ```
 
