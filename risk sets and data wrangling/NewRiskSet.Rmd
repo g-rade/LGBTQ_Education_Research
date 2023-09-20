@@ -1448,7 +1448,7 @@ pollib <- import("./datasets/pollib_median8720.csv") ## policy liberalism
 initiatives <- import("./datasets/initiatives2023.csv") ## initiatives
 evangelical <- import("./datasets/evangelical2021_2011.csv") ## evangelical population
 income <- import("./datasets/incomepcap2011_2022.csv") ## income per capita
-population <- population_all ## population
+population <- read_csv("datasets/population_only2022.csv") ## population
 unified <- import("./datasets/unified_data.csv") ## state unity
 crosswalk <- import("./datasets/state_codes.csv") ## crosswalk file
 bowen <- import("./datasets/bowen8720.csv") ## bowen standardsa
@@ -1626,7 +1626,7 @@ pop_check2 <- population_all %>%
 ```{r}
 ## let's do the final join
 
-covariates <- population_all %>% 
+covariates <- population %>% 
   full_join(population_dems) %>%  ## 1850 obervations (good)
   select(-statefip)
 
@@ -1637,27 +1637,29 @@ covariates <- covariates %>%
   full_join(education) ## join with education, 1850 observations (correct)
 
 covariates <- covariates %>% 
-  left_join(pollib) ## ## join with income 1850 observations (correct) (left join to drop the fips var)
+  full_join(pollib, by = c("state_name", "state", "year")) ## ## join with income 1850 observations (correct) (left join to drop the fips var)
 
 covariates <- covariates %>% 
-  left_join(bowen) ## join with bowen standards
+  full_join(bowen, by = c("state_name", "state", "year")) ## join with bowen standards
 
 covariates <- covariates %>% 
-  left_join(unified) ## join with unified, 1850 observations
+  full_join(unified, by = c("state_name", "state", "year")) ## join with unified, 1850 observations
 
 covariates <- covariates %>% 
-  left_join(initiatives) %>% 
+  full_join(initiatives, by = c("state_name", "state", "year")) %>% 
   select(-c(mean, sd)) ## join with initiatives, 1850 observations (stay winning)
 
 covariates <- covariates %>% 
-  left_join(evangelical2) ## join with evangelical, 1850 observations (slaying)
+  full_join(evangelical2) ## join with evangelical, 1850 observations (slaying)
 
 covariates <- covariates %>% 
-  left_join(crosswalk) ## join the crosswalk dataset to fill in the missing values of the fips codes and stuff 
+  full_join(crosswalk) ## join the crosswalk dataset to fill in the missing values of the fips codes and stuff 
 
 covariates <- covariates %>% 
   select(-c(stateno, statefip, state_num)) ## get rid of redundant columns that i shall not need 
   
 ## export(covariates, "covariates.csv") ## export this
+
+## it's not giving the right number of observations (ughhhhhhhhhhhhh)
 ```
 
