@@ -1663,3 +1663,90 @@ covariates <- covariates %>%
 ## it's not giving the right number of observations (ughhhhhhhhhhhhh)
 ```
 
+```{r}
+empty_data <- import("./datasets/EmptyData.csv")
+
+empty_data <- empty_data %>% 
+  rename(state_name = "State", year = "Year") ## fix those gd variable names
+
+empty_data <- empty_data %>% 
+  mutate(state_name = str_squish(toupper(state_name))) ## fix those gd state names to match everything else
+
+empty_data <- empty_data %>% 
+  arrange(year) ## arrange by year
+
+empty_data <- empty_data %>% 
+  mutate(ID = row_number()) ## add a unique ID number to each state-year combo (an ID variable that will hopefully make joining easier
+```
+
+```{r}
+## now joining things with the empty dataset
+
+population_full <- population %>% 
+  full_join(empty_data) ## everything is joined with the empty dataset (slay)
+
+population_dems_full <- population_dems %>% 
+  full_join(empty_data) ## this also joined correctly
+
+income1_full <- income1 %>% 
+  full_join(empty_data) %>% 
+  select(-c(statefip, stateno, state_icpsr))
+
+education_full <- education %>% 
+  full_join(empty_data)
+
+pollib_full <- pollib %>% 
+  full_join(empty_data)
+
+bowen_full <- bowen %>% 
+  full_join(empty_data)
+
+initiatives_full <- initiatives %>% 
+  full_join(empty_data) %>% 
+  select(-c(initiaitves, mean, sd))
+
+unified_full <- unified %>% 
+  full_join(empty_data)
+
+
+evangelical <- evangelical2 %>% 
+  filter(year %in% c(2014, 2015) & is.na(state_name)) %>% 
+  full_join(crosswalk, by = "state") %>% 
+  select(-c(state_fips.x, state_fips.y, state_name.x, state_icpsr.y, state_icpsr.x, stateno)) %>% 
+  filter(!state %in% c("GU", "PR", "DC", "VI"))
+
+evangelical <- evangelical %>% 
+  rename(state_name = "state_name.y")
+
+evangelical2 <- evangelical2 %>% 
+  filter(!year %in% c(2014, 2015)) %>% 
+  select(-c(state_fips, state_icpsr))
+
+evangelical2 <- evangelical2 %>% 
+  full_join(evangelical)
+
+evangelical_full <- evangelical2 %>% 
+  full_join(empty_data)
+
+covariates <- population_full %>% 
+  full_join(population_dems_full) %>% 
+  full_join(education_full) %>% 
+  full_join(income1_full, by = c("state_name", "year", "ID")) %>% 
+  full_join(evangelical_full) %>% 
+  full_join(initiatives_full, by = c("state_name", "year", "ID")) %>% 
+  full_join(pollib_full, by = c("state_name", "year", "ID")) %>% 
+  full_join(unified_full, by = c("state_name", "year", "ID"))
+
+covariates <- covariates %>% 
+  select(-c(state.x, state_fips.x, state_icpsr.x, statefip.x, stateno.x, state.y, state.x.x, state.y.y, state.x.x.x, state_fips.y, stateno.y, state_icpsr.y))
+
+## now gotta get the exisitng data in with the new data
+
+
+existing2 <- existing %>% 
+  filter(year >= 1987) %>% 
+  select(c(population_total, pollib_median, incomepcap, std_bowen1, std_bowen2, std_init_use, state, state_name, year, pct_black))
+
+
+```
+
