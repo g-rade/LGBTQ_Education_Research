@@ -11,7 +11,7 @@ output: html_document
 library(tidyverse)
 library(rio)
 
-state_data <- import("./covariates.csv") ## risk set we used for modeling
+state_data <- import("./datasets/complete_covars.csv") ## risk set we used for modeling
 ```
 
 covariates: population_total, pollib_median, incomepcap, std_bowen1, std_bowen2, unified, nbrs_lag, nbrs, stf_init_use, evangelical_pop
@@ -191,8 +191,6 @@ evang <- evang %>%
 
 ```
 
-Updates as of 10/24:
+Updates as of 10/26:
 
-- need to add the exisiting data for black/white/hispanic/male/female populations
-
-- std_init_use missing for many states from 2016-2023, need to look into that becuase I have the data through 2022
+- std_init_use missing for many states from 2016-2023, need to look into that becuase I have the data through 2022 (why? must fix)
