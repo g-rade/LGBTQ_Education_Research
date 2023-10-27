@@ -1735,13 +1735,15 @@ covariates <- population_full %>%
   full_join(evangelical_full) %>% 
   full_join(initiatives_full, by = c("state_name", "year", "ID")) %>% 
   full_join(pollib_full, by = c("state_name", "year", "ID")) %>% 
-  full_join(unified_full, by = c("state_name", "year", "ID"))
+  full_join(unified_full, by = c("state_name", "year", "ID")) %>% 
+  full_join(bowen_full, by = c("state_name", "year", "ID"))
 
 covariates <- covariates %>% 
-  select(-c(state.x, state_fips.x, state_icpsr.x, statefip.x, stateno.x, state.y, state.x.x, state.y.y, state.x.x.x, state_fips.y, stateno.y, state_icpsr.y))
+  select(-c(state.x, state_fips.x, state_icpsr.x, statefip.x, stateno.x, state.y, state.x.x, state.y.y, state.x.x.x, state_fips.y, stateno.y, state_icpsr.y, state_fips.y, state_fips.y.y, state_fips.y, state_icpsr.y.y, state_icpsr.x.x, state.y.y.y, state_fips.x.x))
 
 ## now gotta get the exisitng data in with the new data
 
+export(covariates, "covariates.csv")
 
 existing2 <- existing %>% 
   filter(year >= 1987) %>% 

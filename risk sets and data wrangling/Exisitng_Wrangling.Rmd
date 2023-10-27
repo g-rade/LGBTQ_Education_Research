@@ -1,0 +1,123 @@
+---
+title: "Existing_Wrangling"
+author: "Grace Rade"
+date: "2023-10-13"
+output: html_document
+---
+```{r}
+library(rio)
+library(tidyverse)
+library(haven)
+library(janitor)
+library(labelled)
+
+policy_risk_set <- import("./datasets/all_risk_set.csv") %>% 
+  clean_names() %>% 
+  rename(state_name = "state") %>% 
+  mutate(state_name = str_squish(toupper(state_name))) ## the risk set of all the policies w/o covariates
+
+state_names <- import("./datasets/ces_data.dta") %>% 
+  select(-inputstate) %>% 
+  rename(evangelical_pop = "pew_bornagain") %>% 
+  mutate(evangelical_pop = as.numeric(evangelical_pop*100), state = str_squish(state), state_name = str_squish(state_name)) ## name file for all + evangelical data
+
+var_label(state_names$evangelical_pop) <- NULL ## get rid of the variable label
+attributes(state_names$year) <- NULL ## remove all attributes
+state_names$state_name[state_names$state_name == ""] <- NA ## sub out empties for NAs
+
+expanded_years <- import("./datasets/expanded_years.dta")
+
+#remove_attributes(state_names, "format.stata")
+
+
+race_health <- import("./datasets/race_health_data.dta") %>% 
+  mutate(state_name = str_squish(toupper(state_name))) ## covariates
+
+expanded_years <- import("./datasets/expanded_years.dta") %>% 
+  mutate(incomepcap = floor(income), statenam = str_squish(toupper(statenam))) %>% 
+  rename(state_name = "statenam") ## expanded years covariates
+
+state_data <- import("./datasets/state_data.dta") %>% 
+  mutate(state_name = str_squish(toupper(state_name))) ## more covariates
+
+risk_set <- policy_risk_set %>% ## join the risk set to the name file
+  ## at this point there are no missing values in the state-name or state variables
+  left_join(race_health) %>% 
+  left_join(expanded_years)
+
+corsswalk <- import("./datasets/state_codes.csv")
+
+empty_data <- import("./datasets/EmptyData.csv")
+
+empty_data <- empty_data %>% 
+  rename(state_name = "State", year = "Year") ## fix those gd variable names
+
+empty_data <- empty_data %>% 
+  mutate(state_name = str_squish(toupper(state_name))) ## fix those gd state names to match everything else
+
+empty_data <- empty_data %>% 
+  arrange(year) ## arrange by year
+
+empty_data <- empty_data %>% 
+  mutate(ID = row_number())
+
+covariates <- import("./covariates.csv")
+```
+
+```{r}
+## get state_data to 1850
+
+state_data <- state_data %>% 
+  filter(year >= 1987) %>% 
+  select(c(state_name, year, state, popfemale, popmale, pop_black, pop_white, pctblack)) ## select the ones I want
+
+state_data <- empty_data %>% 
+  full_join(state_data)
+
+state_data <- remove_attributes(state_data, c("label", "notes", "format.stata"))
+
+```
+
+```{r}
+## get expanded data to 1850
+
+expanded_years <- expanded_years %>% 
+  filter(year >= 1987) %>% 
+  select(c(state_name, year, state, population_total, incomepcap, unified))
+
+expanded_years <- empty_data %>% 
+  full_join(expanded_years)
+
+expanded_years <-  remove_attributes(expanded_years, c("format.stata"))
+```
+
+```{r}
+race_health <- race_health %>% 
+  filter(year >= 1987) %>% 
+  select(c(statename, year, state, popfemale, popmale, pop_black, pop_white, pctblack))
+
+race_health <- remove_attributes(race_health, c("label", "notes", "format.stata")) ## remove the attributes
+
+race_health <- race_health %>% 
+  rename(state_name = "statename")
+
+race_health <- race_health %>% 
+  full_join(empty_data)
+```
+
+```{r}
+existing2 <- state_data %>% 
+  left_join(race_health) ## second attempt at the covariate data
+
+# existing2 <- existing2 %>% 
+#   select(-c(population_total.y, state.y, incomepcap.y, unified.y))
+# 
+# existing2 <- existing2 %>% 
+#   rename(population_total = "population_total.x", state = "state.x", incomepcap = "incomepcap.x", unified = "unified.x")
+
+complete_covars <- covariates %>% 
+  full_join(existing2, by = c("ID", "state_name", "year")) ## joining the complete covars
+
+#export(complete_covars, "complete_covars.csv")
+```
+

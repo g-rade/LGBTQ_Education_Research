@@ -11,7 +11,7 @@ output: html_document
 library(tidyverse)
 library(rio)
 
-state_data <- import("./datasets/covariates.csv") ## risk set we used for modeling
+state_data <- import("./covariates.csv") ## risk set we used for modeling
 ```
 
 covariates: population_total, pollib_median, incomepcap, std_bowen1, std_bowen2, unified, nbrs_lag, nbrs, stf_init_use, evangelical_pop
@@ -40,13 +40,13 @@ incomepcap <- state_data %>%
 
 std_bowen1 <- state_data %>% 
   select(year, state_name, std_bowen1) %>% 
-  group_by(statename) %>% 
+  group_by(state_name) %>% 
   filter(!is.na(std_bowen1)) %>% 
   summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyond 2016
 
 std_bowen2 <- state_data %>% 
   select(year, state_name, std_bowen2) %>% 
-  group_by(statename) %>% 
+  group_by(state_name) %>% 
   filter(!is.na(std_bowen2)) %>% 
   summarize(min_year = min(year), max_year = max(year)) ## need to get 1987 for all, and beyond 2016
 
@@ -105,50 +105,50 @@ covariate_data <- covariate_data %>%
 ## go through the indicidual covariates
 
 population_total2 <- state_data %>% 
-  select(year, statename, population_total) %>% ## select variables of interest
-  group_by(statename) %>% ## group_by state
+  select(year, state_name, population_total) %>% ## select variables of interest
+  group_by(state_name) %>% ## group_by state
   filter(is.na(population_total)) ## get rid of NA 
 
 ## no missing data in the interim
 
 pollib_median2 <- state_data %>% 
-  select(year, statename, pollib_median) %>% 
-  group_by(statename) %>% 
+  select(year, state_name, pollib_median) %>% 
+  group_by(state_name) %>% 
   filter(is.na(pollib_median))
 
 incomepcap2 <- state_data %>% 
-  select(year, statename, incomepcap) %>% 
-  group_by(statename) %>% 
+  select(year, state_name, incomepcap) %>% 
+  group_by(state_name) %>% 
   filter(is.na(incomepcap))
 
 std_bowen12 <- state_data %>% 
-  select(year, statename, std_bowen1) %>% 
-  group_by(statename) %>% 
+  select(year, state_name, std_bowen1) %>% 
+  group_by(state_name) %>% 
   filter(is.na(std_bowen1))
 
 std_bowen22 <- state_data %>% 
-  select(year, statename, std_bowen2) %>% 
-  group_by(statename) %>% 
+  select(year, state_name, std_bowen2) %>% 
+  group_by(state_name) %>% 
   filter(is.na(std_bowen2))
 
 unified2 <- state_data %>% 
-  select(year, statename, unified) %>% 
-  group_by(statename) %>% 
+  select(year, state_name, unified) %>% 
+  group_by(state_name) %>% 
   filter(is.na(unified))
 
-nbrs_lag2 <- state_data %>% 
-  select(year, statename, nbrs_lag) %>% 
-  group_by(statename) %>% 
-  filter(is.na(nbrs_lag))
-
-nbrs2 <- state_data %>% 
-  select(year, statename, nbrs) %>% 
-  group_by(statename) %>% 
-  filter(is.na(nbrs))
+# nbrs_lag2 <- state_data %>% 
+#   select(year, state_name, nbrs_lag) %>% 
+#   group_by(state_name) %>% 
+#   filter(is.na(nbrs_lag))
+# 
+# nbrs2 <- state_data %>% 
+#   select(year, state_name, nbrs) %>% 
+#   group_by(state_name) %>% 
+#   filter(is.na(nbrs))
 
 std_init_use2 <- state_data %>% 
-  select(year, statename, std_init_use) %>% 
-  group_by(statename) %>% 
+  select(year, state_name, std_init_use) %>% 
+  group_by(state_name) %>% 
   filter(is.na(std_init_use))
 
 ```
@@ -191,3 +191,8 @@ evang <- evang %>%
 
 ```
 
+Updates as of 10/24:
+
+- need to add the exisiting data for black/white/hispanic/male/female populations
+
+- std_init_use missing for many states from 2016-2023, need to look into that becuase I have the data through 2022
