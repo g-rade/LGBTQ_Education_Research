@@ -61,7 +61,7 @@ empty_data <- empty_data %>%
 empty_data <- empty_data %>% 
   mutate(ID = row_number())
 
-covariates <- import("./covariates.csv")
+covariates <- import("./datasets/covariates.csv")
 ```
 
 ```{r}
@@ -119,5 +119,17 @@ complete_covars <- covariates %>%
   full_join(existing2, by = c("ID", "state_name", "year")) ## joining the complete covars
 
 #export(complete_covars, "complete_covars.csv")
+```
+
+
+
+```{r}
+## fix our risk set for the education project to re-reun analyses
+complete_covars2 <- import("./datasets/complete_covars.csv")
+
+complete_risk_set <- policy_risk_set %>% 
+  left_join(complete_covars2) ## new risk set with the updated data
+
+## export(complete_risk_set, "risk_set_Oct23.csv") ## export the updated risk set
 ```
 

@@ -11,7 +11,7 @@ output: html_document
 library(tidyverse)
 library(rio)
 
-state_data <- import("./datasets/complete_covars.csv") ## risk set we used for modeling
+state_data <- import("./complete_covars.csv") ## risk set we used for modeling
 ```
 
 covariates: population_total, pollib_median, incomepcap, std_bowen1, std_bowen2, unified, nbrs_lag, nbrs, stf_init_use, evangelical_pop

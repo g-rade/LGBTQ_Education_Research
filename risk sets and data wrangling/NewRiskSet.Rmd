@@ -1752,3 +1752,52 @@ existing2 <- existing %>%
 
 ```
 
+```{r}
+## need to fix the initiatives data (why is it like this)
+
+complete_covars <- import("./datasets/complete_covars.csv")
+
+std_inits <- import("./datasets/initiatives2023.csv")  ## initiatives data
+
+empty_data <- import("./datasets/EmptyData.csv") ## import the empty data
+
+empty_data <- empty_data %>% 
+  rename(state_name = "State", year = "Year") 
+
+empty_data <- empty_data %>% 
+  mutate(state_name = str_squish(toupper(state_name))) ## fix those gd state names to match everything else
+
+empty_data <- empty_data %>% 
+  arrange(year) ## arrange by year
+
+empty_data <- empty_data %>% 
+  mutate(ID = row_number())
+
+## export(empty_data, "empty_data.csv") export it so I don't have to mess with it again
+```
+
+```{r}
+complete_covars <- complete_covars %>% 
+  select(-c(state.y, pctblack.x, statefip.y, std_init_use, init, initiatives)) ## drop the extra variables and the std_init_use variable
+
+std_inits <- std_inits %>% 
+  full_join(empty_data) 
+
+std_inits <- std_inits %>% 
+  select(-c(mean, sd, initiaitves, state)) %>% 
+  filter(year >= 1987)
+
+std_inits <- std_inits %>% 
+  filter(!is.na(std_init_use))
+
+std_inits <- std_inits %>% 
+  distinct(ID, .keep_all = T)
+
+complete_covars <- complete_covars %>% 
+  left_join(std_inits, by = c("ID", "state_name", "year")) ## re-join with the complete covars 
+
+##export(complete_covars, "complete_covars.csv") ## export it 
+
+## we did it joe
+```
+
